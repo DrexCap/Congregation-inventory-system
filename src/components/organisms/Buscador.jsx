@@ -2,7 +2,8 @@ import styled from "styled-components";
 import {FaSearch} from "react-icons/fa";
 import {useEffect, useRef} from "react";
 
-export const Buscador = ({setBuscador, onFocus, funcion, setEspacioAbajoElem=null}) => {
+export const Buscador = ({setBuscador, onFocus, funcion, 
+                            buscarProducto=false, setEspacioAbajoElem=null}) => {
 
     const cajaRef = useRef(null);
 
@@ -15,6 +16,11 @@ export const Buscador = ({setBuscador, onFocus, funcion, setEspacioAbajoElem=nul
 
     const buscar = (e) => {
         setBuscador(e.target.value);
+    }
+
+    const buscar2 = (e) => {
+        const nomProducto = e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1).toLowerCase();
+        setBuscador(nomProducto);
     }
 
     function ejecutarFuncion() {
@@ -30,7 +36,7 @@ export const Buscador = ({setBuscador, onFocus, funcion, setEspacioAbajoElem=nul
         >
             <article className="content">
                 <FaSearch className="icono"/>
-                <input onFocus={onFocus} onChange={buscar} placeholder="...Buscar"/>
+                <input onFocus={onFocus} onChange={buscarProducto?buscar2:buscar} placeholder="...Buscar"/>
             </article>
         </Container>
     );

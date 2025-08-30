@@ -1,8 +1,10 @@
 import styled from "styled-components";
 
-export function InputText({ children, icono }) {
+export function InputText({ children, icono, stilos=false }) {
     return (
-        <Container>
+        <Container
+          $stilos={stilos}
+        >
             <span>{icono}</span>
 
             <div className="form__group field">
@@ -22,7 +24,7 @@ const Container = styled.div`
   }
   .form__group {
     position: relative;
-    padding: 20px 0 0;
+    padding: ${(props)=>props.$stilos?"6px 0 0":"20px 0 0"};
     width: 100%;
   }
   input:-webkit-autofill,

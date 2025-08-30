@@ -33,6 +33,8 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
     //TODO: Para sacar el espacio entre buscador y el elemento padre
     const [espacioIzquieElem, setEspacioIzquieElem] = useState(0);
 
+    const buscarProducto = true;
+
     async function insertar(data) {
         const p = {
             fecha: new Date(),
@@ -64,6 +66,7 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                 <div className="contentBuscador">
                     <div onClick={() => SetstateListaProd(!stateListaProd)}>
                         <Buscador
+                            buscarProducto={buscarProducto}
                             setBuscador={setBuscador}
                             setEspacioIzquieElem={setEspacioIzquieElem}
                             onFocus={() => setFocused(true)}

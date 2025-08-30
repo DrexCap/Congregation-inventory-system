@@ -2,7 +2,12 @@ import styled from "styled-components";
 import { v, Btnsave, useAuthStore } from "../../../index";
 export function SidebarCard() {
 
-    const {signOut} = useAuthStore()
+    const {signOut} = useAuthStore();
+
+    const salir = async () => {
+        sessionStorage.removeItem("autoReloaded");
+        await signOut();
+    };
 
     return (
         <Container>
@@ -12,7 +17,7 @@ export function SidebarCard() {
                 <div className="circle2"></div>
                 <h3>Cerrar sesión</h3>
                 <div className="contentBtn">
-                    <Btnsave titulo="Salir ..." bgcolor="#f8f2fd" funcion={signOut} />
+                    <Btnsave titulo="Salir ..." bgcolor="#f8f2fd" funcion={salir} />
                 </div>
             </div>
         </Container>

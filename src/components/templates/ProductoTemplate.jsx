@@ -31,6 +31,8 @@ export function ProductoTemplate({data}) {
         setDataSelect([]);
     }
 
+    const buscarProducto = true;
+
     const { setBuscador } = useProductosStore();
 
     return (
@@ -62,7 +64,7 @@ export function ProductoTemplate({data}) {
             </section>
 
             <section className="area2">
-                <Buscador setBuscador={setBuscador}/>
+                <Buscador buscarProducto={buscarProducto} setBuscador={setBuscador}/>
             </section>
 
             <section className="main">

@@ -1,10 +1,19 @@
 
 import styled from "styled-components";
+import { useEffect } from "react";
 import { Device } from "../../styles/breackpoints";
 import { v } from "../../styles/variables";
 import { CardDatosEmpresa } from "../molecules/CardDatosEmpresa";
 
 export function BannerHome() {
+
+    useEffect(() => {
+      // Verifica si ya se recargó esta sesión
+      if (!sessionStorage.getItem("autoReloaded")) {
+        sessionStorage.setItem("autoReloaded", "true");
+        window.location.reload();
+      }
+    }, []);
 
     return (
         <>

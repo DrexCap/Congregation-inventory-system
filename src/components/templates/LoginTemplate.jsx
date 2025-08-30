@@ -10,17 +10,23 @@ import { MdOutlineInfo } from "react-icons/md";
 import { ThemeContext } from "../../App";
 
 export function LoginTemplate() {
+
     const { setThemeUse } = useContext(ThemeContext);
     setThemeUse("light");
-    const { signInWithEmail } = useAuthStore();
+    
     const [state, setState] = useState(false);
     const [stateInicio, setStateInicio] = useState(false);
+
     const navigate = useNavigate();
+
+    const { signInWithEmail } = useAuthStore();
+
     const {
         register, // Identifica cada input del formulario
         formState: { errors }, // Para ver los errores del formulario
         handleSubmit, // Para manejar el envío del formulario
     } = useForm();
+
     async function iniciar(data) {
         const response = await signInWithEmail({
             correo: data.correo,

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useQuery } from "@tanstack/react-query";
 import { v } from "../../../styles/variables";
 import { Device } from "../../../styles/breackpoints";
 import {
@@ -218,15 +217,16 @@ export function RegistrarProductos({ onClose, dataSelect, accion }) {
                         </article>
 
                         <article>
-                            <InputText icono={<v.iconocodigobarras/>}>
+                            <InputText stilos={true} icono={<v.iconocodigobarras/>}>
                                 <input
-                                    className="form__field"
+                                    disabled={true}
+                                    className="form__field disabled"
                                     defaultValue={dataSelect.codigo_barras}
                                     type="`number`"
                                     placeholder=""
                                     {...register("codigo_barras", {required: false,})}
                                 />
-                                <label className="form__label">Codigo de Barras</label>
+                                <label className="form__label ">Codigo de Barras</label>
                                 {/* {errors.codigo_barras?.type === "required" && <p>Campo requerido</p>} */}
                             </InputText>
                         </article>
@@ -236,7 +236,8 @@ export function RegistrarProductos({ onClose, dataSelect, accion }) {
                         <article>
                             <InputText icono={<v.iconocodigointerno/>}>
                                 <input
-                                    className="form__field"
+                                    disabled={accion==="Editar"?true:false}
+                                    className={accion==="Editar"?"form__field disabled":"form__field"}
                                     defaultValue={dataSelect.codigo_interno}
                                     type="`number`"
                                     placeholder=""
@@ -282,9 +283,10 @@ export function RegistrarProductos({ onClose, dataSelect, accion }) {
                         </ContainerSelector>
 
                         <article>
-                            <InputText icono={<v.iconocodigointerno/>}>
+                            <InputText stilos={true} icono={<v.iconocodigointerno/>}>
                                 <input
-                                    className="form__field"
+                                    disabled={true}
+                                    className="form__field disabled"
                                     defaultValue={dataSelect.precio_venta}
                                     type="`number`"
                                     placeholder=""
