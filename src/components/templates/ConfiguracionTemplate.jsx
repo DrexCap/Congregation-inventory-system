@@ -39,7 +39,7 @@ export function ConfiguracionTemplate() {
 const Container = styled.div`
     --bg-color: rgb(20, 20, 20);
     --card-color: rgb(23, 23, 23);
-    background-image: url(${fondocuadros});
+    background-image: url(${new URL("../../assets/fondocuadros.svg", import.meta.url).href});
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat, repeat;
