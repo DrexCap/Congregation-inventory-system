@@ -49,7 +49,7 @@ const Container = styled.div`
     align-items: center;
     display: flex;
     color: ${(props)=>props.theme.text};
-    border: 1px solid #414244;
+    border: 3px solid #414244;
     .content {
         padding: 15px;
         gap: 10px;

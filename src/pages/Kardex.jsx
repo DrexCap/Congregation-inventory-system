@@ -13,10 +13,15 @@ export function Kardex() {
     const statePermiso = dataPermisos.some((objeto)=> objeto.modulos.nombre.includes("Kardex"));
 
     // TODO: CRUD productos Store
-    const { buscarProducto, buscador: buscadorProductos } = useProductosStore();
+    const { buscarProducto, buscador: buscadorProductos, itemProductoCero } = useProductosStore();
 
     const { mostrarKardex, dataKardex, buscarKardex, buscador: buscador } = useKardexStore();
     const { dataEmpresa } = useEmpresaStore();
+
+    const {isLoading: cargando} = useQuery({
+        queryKey: ["Restablecer el Producto Item "],
+        queryFn: () => itemProductoCero(),
+    })
 
     const {isLoading, error} = useQuery({
         queryKey: ["Mostrar kardex ", { _id_empresa: dataEmpresa?.id }],

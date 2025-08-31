@@ -66,6 +66,20 @@ const Container = styled.div`
     padding: 15px;
     width: 100%;
     color: ${({ theme }) => theme.text};
+
+    --bg-color: rgb(20, 20, 20);
+    --card-color: rgb(23, 23, 23);
+    background-image: url("/fondocuadros.svg");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat, repeat;
+    align-items: center;
+    background-color: ${({ theme }) => theme.bgtotal};
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    overflow-y: auto;
+    overflow-x: hidden;
     
 `;
 

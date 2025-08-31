@@ -26,11 +26,11 @@ export const styleDevice = (espacioIzquieElem, espacioAbajoElem=null) => {
     const abajo = () => {
         if(height > 1000) { // 1018
             // return espacioAbajoElem < 500 ? espacioAbajoElem*0.19 : espacioAbajoElem*0.087;
-            return espacioAbajoElem < 500 ? espacioAbajoElem*5.70 : espacioAbajoElem*0.087;
+            return espacioAbajoElem < 500 ? espacioAbajoElem*3.75 : espacioAbajoElem*0.087;
         } else if (height > 700) {
             if(espacioAbajoElem < 500) {
                 // return espacioAbajoElem*0.23
-                return espacioAbajoElem*3.19
+                return espacioAbajoElem*2.60
             } else {
                 // return espacioAbajoElem*0.109
                 return espacioAbajoElem*0.109

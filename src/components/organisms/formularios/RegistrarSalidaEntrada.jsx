@@ -62,7 +62,7 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                         <span onClick={onClose}>x</span>
                     </section>
                 </div>
-
+           
                 <div className="contentBuscador">
                     <div onClick={() => SetstateListaProd(!stateListaProd)}>
                         <Buscador
