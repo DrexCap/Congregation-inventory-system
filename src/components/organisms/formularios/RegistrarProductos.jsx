@@ -250,7 +250,10 @@ export function RegistrarProductos({ onClose, dataSelect, accion }) {
                                         `Codigo Interno:  ${codigoInterno}`
                                     }
                                 </label>
-                                {errors.codigo_interno?.type === "required" && <p>Campo requerido</p>}
+                                {
+                                    accion === "Nuevo" && errors.codigo_interno?.type === "required" ? 
+                                    ( <p>Campo requerido</p>) : null
+                                }
                             </InputText>
                         </article>
 
