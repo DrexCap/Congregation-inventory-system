@@ -69,6 +69,8 @@ export function RegistrarProductos({ onClose, dataSelect, accion }) {
     }
 
     async function insertar(data) {
+        console.log({cod: data.codigo_interno});
+        
         if (accion === "Editar") {
             const p = {
                 id: dataSelect.id,
@@ -189,12 +191,13 @@ export function RegistrarProductos({ onClose, dataSelect, accion }) {
                         <article>
                             <InputText icono={<v.iconostock/>}>
                                 <input
-                                    className="form__field"
+                                    readOnly={accion==="Editar"?true:false}
+                                    className={accion==="Editar"?"form__field disabled":"form__field"}
                                     defaultValue={dataSelect.stock}
                                     type="number"
-                                    step="0.01"
+                                    step="1"
                                     placeholder=""
-                                    {...register("stock", {required: true,})}
+                                    {...register("stock", {required: accion==="Editar"?false:true,})}
                                 />
                                 <label className="form__label">Stock actual</label>
                                 {errors.stock?.type === "required" && <p>Campo requerido</p>}
@@ -207,7 +210,7 @@ export function RegistrarProductos({ onClose, dataSelect, accion }) {
                                     className="form__field"
                                     defaultValue={dataSelect.stock_minimo}
                                     type="number"
-                                    step="0.01"
+                                    step="1"
                                     placeholder=""
                                     {...register("stock_minimo", {required: true,})}
                                 />
@@ -236,24 +239,21 @@ export function RegistrarProductos({ onClose, dataSelect, accion }) {
                         <article>
                             <InputText icono={<v.iconocodigointerno/>}>
                                 <input
-                                    disabled={accion==="Editar"?true:false}
+                                    readOnly={true}
                                     className={accion==="Editar"?"form__field disabled":"form__field"}
-                                    defaultValue={dataSelect.codigo_interno}
-                                    type="`number`"
+                                    defaultValue={dataSelect.codigo_interno || codigoInterno}
+                                    type="text"
                                     placeholder=""
-                                    {...register("codigo_interno", {required: true,})}
+                                    {...register("codigo_interno", {required: accion==="Editar"?false:true,})}
                                 />
                                 <label className="form__label">
                                     {
                                         dataSelect.codigo_interno?
                                         `Codigo Interno:  ${dataSelect.codigo_interno}`:
-                                        `Codigo Interno:  ${codigoInterno}`
+                                        `Cod. Interno Generado:  ${codigoInterno}`
                                     }
                                 </label>
-                                {
-                                    accion === "Nuevo" && errors.codigo_interno?.type === "required" ? 
-                                    ( <p>Campo requerido</p>) : null
-                                }
+                                {errors.codigo_interno?.type === "required" && <p>Campo requerido</p>}
                             </InputText>
                         </article>
 
