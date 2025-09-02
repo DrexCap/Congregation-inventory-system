@@ -10,16 +10,11 @@ export const columnasKardex = (eliminar) => {
             accessorKey: "descripcion",
             header: "Producto",
             cell: (info) => <td data-title="Producto" className="ContentCell">
-                <span style={{textDecoration: info.row.original.estado===0 && "line-through"}}>
+                <span >
                     {info.getValue()}
                 </span>
             </td>,
-            enableColumnFilter: true,
-            filterFn: (row, columnId, filterStatuses) => {
-                if (filterStatuses.length === 0) return true;
-                const status = row.getValue(columnId);
-                return filterStatuses.includes(status?.id);
-            },
+            enableColumnFilter: true
         },
         {
             accessorKey: "fecha",
@@ -30,12 +25,7 @@ export const columnasKardex = (eliminar) => {
                     <span>{info.getValue()}</span>
                 </td>
             ),
-            enableColumnFilter: true,
-            filterFn: (row, columnId, filterStatuses) => {
-                if (filterStatuses.length === 0) return true;
-                const status = row.getValue(columnId);
-                return filterStatuses.includes(status?.id);
-            },
+            enableColumnFilter: true
         },
         {
             accessorKey: "tipo",
@@ -60,12 +50,7 @@ export const columnasKardex = (eliminar) => {
                     )}
                 </td>
             ),
-            enableColumnFilter: true,
-            filterFn: (row, columnId, filterStatuses) => {
-                if (filterStatuses.length === 0) return true;
-                const status = row.getValue(columnId);
-                return filterStatuses.includes(status?.id);
-            },
+            enableColumnFilter: true
         },
         {
             accessorKey: "detalle",
@@ -76,12 +61,7 @@ export const columnasKardex = (eliminar) => {
                     <span >{info.getValue()}</span>
                 </td>
             ),
-            enableColumnFilter: true,
-            filterFn: (row, columnId, filterStatuses) => {
-                if (filterStatuses.length === 0) return true;
-                const status = row.getValue(columnId);
-                return filterStatuses.includes(status?.id);
-            },
+            enableColumnFilter: true
         },
         {
             accessorKey: "nombres",
@@ -92,12 +72,7 @@ export const columnasKardex = (eliminar) => {
                     <span>{info.getValue()}</span>
                 </td>
             ),
-            enableColumnFilter: true,
-            filterFn: (row, columnId, filterStatuses) => {
-                if (filterStatuses.length === 0) return true;
-                const status = row.getValue(columnId);
-                return filterStatuses.includes(status?.id);
-            },
+            enableColumnFilter: true
         },
         {
             accessorKey: "cantidad",
@@ -105,31 +80,28 @@ export const columnasKardex = (eliminar) => {
             enableSorting: false,
             cell: (info) => (
                 <td data-title="Cantidad" className="ContentCell">
-                    <span>{info.getValue()}</span>
+                    { info.row.original.tipo==='salida'?
+                        <span style={{color: "#ed4d4d", fontWeight: 700}}>
+                            - {info.getValue()}
+                        </span> :
+                        <span style={{color: "#30c85b", fontWeight: 700}}>
+                            + {info.getValue()}
+                        </span>
+                    }
                 </td>
             ),
-            enableColumnFilter: true,
-            filterFn: (row, columnId, filterStatuses) => {
-                if (filterStatuses.length === 0) return true;
-                const status = row.getValue(columnId);
-                return filterStatuses.includes(status?.id);
-            },
+            enableColumnFilter: true
         },
         {
-            accessorKey: "stock",
-            header: "Stock",
+            accessorKey: "stock_resultante",
+            header: "Stock Resultante",
             enableSorting: false,
             cell: (info) => (
-                <td data-title="Stock" className="ContentCell">
+                <td data-title="Stock_Resultante" className="ContentCell">
                     <span>{info.getValue()}</span>
                 </td>
             ),
-            enableColumnFilter: true,
-            filterFn: (row, columnId, filterStatuses) => {
-                if (filterStatuses.length === 0) return true;
-                const status = row.getValue(columnId);
-                return filterStatuses.includes(status?.id);
-            },
+            enableColumnFilter: true
         },
         {
             accessorKey: "acciones",

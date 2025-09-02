@@ -1,6 +1,6 @@
 
 import styled from "styled-components";
-import {useState, useMemo} from "react";
+import {useState, useMemo, useEffect} from "react";
 import {
     useReactTable,
     getCoreRowModel,
@@ -16,6 +16,15 @@ import { columnasKardex, Paginacion, useKardexStore, v } from "../../../index";
 export const TablaKardex = ({ data, setAccion, setDataSelect, setOpenRegistro }) => {
     const [pagina, setPagina] = useState(1);
     const { eliminarKardex } = useKardexStore();
+
+    // const [localData, setLocalData] = useState([]);
+
+    // // Actualiza localData cuando data cambia
+    // useEffect(() => {
+    //     if (data && data.length > 0) {
+    //         setLocalData(data);
+    //     }
+    // }, [data]);
 
     const eliminar = (p) => {
         if(p.estado===0){
@@ -43,30 +52,15 @@ export const TablaKardex = ({ data, setAccion, setDataSelect, setOpenRegistro })
 
     const columns = useMemo(()=>columnasKardex(eliminar), []);
 
+    const memoizedData = useMemo(() => data, [data]);
+
     const table = useReactTable({
-        data,
+        data: memoizedData,
         columns,
-        // state: {
-        //     columnFilters,
-        // },
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        // columnResizeMode: "onChange",
-        // meta: {
-        //     updateData: (rowIndex, columnId, value) =>
-        //         setData((prev) =>
-        //             prev.map((row, index) =>
-        //                 index === rowIndexs
-        //                     ? {
-        //                         ...prev[rowIndex],
-        //                         [columnId]: value,
-        //                     }
-        //                     : row
-        //             )
-        //         ),
-        // },
     });
 
     return (

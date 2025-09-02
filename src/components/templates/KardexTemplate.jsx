@@ -75,21 +75,6 @@ export function KardexTemplate({data}) {
 
             <section className="main">
                 <Tabs data={data}/>
-                
-                {/* {data.length == 0 && (
-                  <Lottieanimacion
-                    alto="300"
-                    ancho="300"
-                    animacion={vacio}
-                  />
-                )}
-
-                <TablaMarca
-                  data={data}
-                  SetopenRegistro={SetopenRegistro}
-                  setdataSelect={setdataSelect}
-                  setAccion={setAccion}
-                /> */}
             </section>
         </Container>
     )

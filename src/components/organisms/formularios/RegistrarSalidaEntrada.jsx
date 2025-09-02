@@ -36,6 +36,13 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
     const buscarProducto = true;
 
     async function insertar(data) {
+        let stockResultante = 0;
+        if (tipo === "salida") {
+            stockResultante = productoItemSelect.stock - parseFloat(data.cantidad);
+        } else {
+            stockResultante = productoItemSelect.stock + parseFloat(data.cantidad);
+        }
+
         const p = {
             fecha: new Date(),
             tipo: tipo,
@@ -43,7 +50,8 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
             id_producto: productoItemSelect.id,
             cantidad: parseFloat(data.cantidad),
             detalle: data.detalle,
-            id_empresa: dataEmpresa.id
+            id_empresa: dataEmpresa.id,
+            stock_resultante: stockResultante,
         };
         await insertarKardex(p);
         selectProducto("");
