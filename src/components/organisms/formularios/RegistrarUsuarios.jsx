@@ -187,6 +187,20 @@ export function RegistrarUsuarios({ onClose, dataSelect, accion }) {
                         </ContainerSelector>
 
                         <article>
+                            <InputText icono={<v.iconostockminimo/>}>
+                                <input
+                                    className="form__field"
+                                    defaultValue={dataSelect.nro_doc}
+                                    type="text"
+                                    placeholder=""
+                                    {...register("nro_doc", {required: true,})}
+                                />
+                                <label className="form__label">Número de documento</label>
+                                {errors.nro_doc?.type === "required" && <p>Campo requerido</p>}
+                            </InputText>
+                        </article>
+
+                        <article>
                             <InputText icono={<v.iconostock/>}>
                                 <input
                                     className="form__field"
@@ -200,22 +214,6 @@ export function RegistrarUsuarios({ onClose, dataSelect, accion }) {
                             </InputText>
                         </article>
 
-                        <article>
-                            <InputText icono={<v.iconostockminimo/>}>
-                                <input
-                                    className="form__field"
-                                    defaultValue={dataSelect.nro_doc}
-                                    type="text"
-                                    placeholder=""
-                                    {...register("nro_doc", {required: true,})}
-                                />
-                                <label className="form__label">Número de documento</label>
-                                {errors.nro_doc?.type === "required" && <p>Campo requerido</p>}
-                            </InputText>
-                        </article>
-                    </section>
-
-                    <section>
                         <article>
                             <InputText icono={<v.iconocodigobarras/>}>
                                 <input
@@ -243,6 +241,9 @@ export function RegistrarUsuarios({ onClose, dataSelect, accion }) {
                                 {errors.direccion?.type === "required" && <p>Campo requerido</p>}
                             </InputText>
                         </article>
+                    </section>
+
+                    <section>
 
                         <ContainerSelector>
                             <label for="marca">T. Usuario:</label>

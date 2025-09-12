@@ -2,6 +2,7 @@ import {
     MostrarUsuarios,
     supabase,
     DataModulosConfiguracion,
+    DataSubModuloProductos,
     InsertarUsuarios,
     MostrarUsuarioTodo,
     MostrarModulos,
@@ -117,6 +118,7 @@ export const useUserStore = create((set,get)=>({
     mostrarPermisos: async (p) => {
         const response = await MostrarPermisos(p);
         set({ dataPermisos: response });
+        
         let allDocs = [];
         DataModulosConfiguracion.map((element) => {
             const statePermiso = response.some((objeto) =>
@@ -124,12 +126,27 @@ export const useUserStore = create((set,get)=>({
             );
             if(statePermiso) {
                 allDocs.push({...element,state:true})
-            }else{
+            } else {
                 allDocs.push({...element,state:false})
             }
         });
         DataModulosConfiguracion.splice(0,DataModulosConfiguracion.length)
         DataModulosConfiguracion.push(...allDocs)
+
+        let allSubDocs = [];
+        DataSubModuloProductos.map((element) => {
+            const statePermiso = response.some((objeto) =>
+                objeto.modulos.nombre.includes(element.title)
+            );
+            if(statePermiso) {
+                allSubDocs.push({...element,state:true})
+            } else {
+                allSubDocs.push({...element,state:false})
+            }
+        });
+        DataSubModuloProductos.splice(0,DataSubModuloProductos.length)
+        DataSubModuloProductos.push(...allSubDocs)
+        console.log({DataModulosConfiguracion,DataSubModuloProductos});
 
         return response;
     },

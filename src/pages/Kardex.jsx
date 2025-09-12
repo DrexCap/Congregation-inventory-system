@@ -21,6 +21,10 @@ export function Kardex() {
     const {isLoading: cargando} = useQuery({
         queryKey: ["Restablecer el Producto Item "],
         queryFn: () => itemProductoCero(),
+        refetchOnWindowFocus: false, // evita que se dispare al cambiar de pestaña
+        refetchOnMount: false,       // no vuelve a pedir datos si ya están en cache
+        refetchOnReconnect: false,   // evita refetch al reconectar internet
+        staleTime: Infinity,        // nunca se considera "viejo" → no vuelve a pedir
     })
 
     const {isLoading, error} = useQuery({

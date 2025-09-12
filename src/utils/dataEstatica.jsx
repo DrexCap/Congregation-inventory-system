@@ -55,14 +55,34 @@ export const TemasData = [
     {
         icono: "🌞",
         descripcion: "light",
-
     },
     {
         icono: "🌚",
         descripcion: "dark",
-
     },
 ];
+
+//TODO: Data submodulo configuracion
+export const DataSubModuloProductos = [
+    {
+        title:"Suministros",
+        subtitle:"Registra tus suminitros",
+        icono:"https://i.ibb.co/PGcg03R4/suministros-sin-fondo-2.png",
+        link:"/configurar/productos/suministros",
+    },
+    {
+        title:"Caratulas",
+        subtitle:"Registra tus caratulas",
+        icono:"https://i.ibb.co/4Rjxy68b/caratulas-removebg-preview.png",
+        link:"/configurar/productos/caratulas",
+    },
+    {
+        title:"Libros",
+        subtitle:"Registra tus libros",
+        icono:"https://i.ibb.co/pBQ1gSfY/libros-sin-fondo.png",
+        link:"/configurar/productos/libros",
+    },
+]
 
 //data configuracion
 export const DataModulosConfiguracion =[
@@ -71,28 +91,24 @@ export const DataModulosConfiguracion =[
         subtitle:"registra tus productos",
         icono:"https://i.ibb.co/85zJ6yG/caja-del-paquete.png",
         link:"/configurar/productos",
-
     },
     {
         title:"Personal",
         subtitle:"ten el control de tu personal",
         icono:"https://i.ibb.co/5vgZ0fX/hombre.png",
         link:"/configurar/usuarios",
-
     },
     {
         title:"Tu empresa",
         subtitle:"configura tus opciones básicas",
         icono:"https://i.ibb.co/x7mHPgm/administracion-de-empresas.png",
         link:"/configurar/empresa",
-
     },
     {
         title:"Categoria de productos",
         subtitle:"asigna categorias a tus productos",
         icono:"https://i.ibb.co/VYbMRLZ/categoria.png",
         link:"/configurar/categorias",
-
     },
     {
         title:"Marca de productos",

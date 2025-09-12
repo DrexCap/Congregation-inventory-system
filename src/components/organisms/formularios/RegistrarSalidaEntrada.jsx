@@ -33,8 +33,6 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
     //TODO: Para sacar el espacio entre buscador y el elemento padre
     const [espacioIzquieElem, setEspacioIzquieElem] = useState(0);
 
-    const buscarProducto = true;
-
     async function insertar(data) {
         let stockResultante = 0;
         if (tipo === "salida") {
@@ -74,7 +72,7 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                 <div className="contentBuscador">
                     <div onClick={() => SetstateListaProd(!stateListaProd)}>
                         <Buscador
-                            buscarProducto={buscarProducto}
+                            buscarProducto={true}
                             setBuscador={setBuscador}
                             setEspacioIzquieElem={setEspacioIzquieElem}
                             onFocus={() => setFocused(true)}
@@ -89,19 +87,22 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                             anchoListaGenerica="430px"
                             setState={() => SetstateListaProd(!stateListaProd)}
                             data={dataProducto}
-                            funcion={selectProducto}
+                            funcion={(p)=> {
+                                selectProducto(p);
+                                setBuscador("");
+                            }}
                         />
                     )}
                 </div>
 
                 {/*TODO: OJO Cambiar el estilo para esta card */}
-                <CardProducto>
-                    <span style={{ color: "#1fee61", fontWeight: "bold" }}>
+                <CardProducto $tipo={tipo}>
+                    <span style={{ color: tipo === "entrada" ? "#1fee61" : "#f04f4f", fontWeight: "bold" }}>
                         {productoItemSelect?.descripcion}
                     </span>
 
                     <span style={{ color: (theme) => theme.text }}>
-                        stock actual: {productoItemSelect?.stock}
+                        Stock Actual: {productoItemSelect?.stock}
                     </span>
                 </CardProducto>
 
@@ -237,13 +238,14 @@ const ContainerEmojiPicker = styled.div`
   bottom: 0;
   right: 0;
 `;
+
 const CardProducto = styled.section`
   margin-top: 10px;
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
   border-radius: 15px;
-  border: 1px dashed #54f04f;
-  background-color: rgba(84, 240, 79, 0.1);
+  border: 1px dashed ${(props) => props.$tipo === "entrada" ? "#54f04f" : "#f04f4f"};
+  background-color: ${(props) => props.$tipo === "entrada" ? "rgba(84, 240, 79, 0.1)" : "rgba(239, 56, 56, 0.1)"};
   padding: 10px;
 `;

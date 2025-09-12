@@ -16,7 +16,6 @@ export function KardexTemplate({data}) {
 
     const { selectProducto } = useProductosStore();
 
-
     function cerrarRegistro() {
         SetopenRegistro(!openRegistro);
         selectProducto("");
@@ -70,7 +69,7 @@ export function KardexTemplate({data}) {
             </section>
 
             <section className="area2">
-                <Buscador setBuscador={setBuscador}/>
+                <Buscador buscarProducto={true} setBuscador={setBuscador}/>
             </section>
 
             <section className="main">

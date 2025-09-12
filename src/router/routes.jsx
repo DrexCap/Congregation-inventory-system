@@ -14,7 +14,8 @@ import {
     Reportes,Layout,
     StockActualTodos,
     StockActualPorProducto, StockBajoMinimo,
-    KardexEntradaSalida, StockInventarioValorado
+    KardexEntradaSalida, StockInventarioValorado,
+    ConfiguracionProducto
 } from "../index";
 
 export function MyRoutes() {
@@ -44,6 +45,38 @@ export function MyRoutes() {
                 </ProtectedRoute>
             }/>
 
+            <Route path="/configurar/productos" element={
+                <ProtectedRoute accessBy="authenticated" >
+                    <Layout>
+                        <ConfiguracionProducto /> //Pagina Intermedia entre los 3 tipos de productos
+                    </Layout>
+                </ProtectedRoute>
+            }/>
+
+            <Route path="/configurar/productos/suministros" element={
+                <ProtectedRoute accessBy="authenticated" >
+                    <Layout>
+                        <Productos />
+                    </Layout>
+                </ProtectedRoute>
+            }/>
+
+            <Route path="/configurar/productos/caratulas" element={
+                <ProtectedRoute accessBy="authenticated" >
+                    <Layout>
+                        {/* <Productos /> */}
+                    </Layout>
+                </ProtectedRoute>
+            }/>
+
+            <Route path="/configurar/productos/libros" element={
+                <ProtectedRoute accessBy="authenticated" >
+                    <Layout>
+                        {/* <Productos /> */}
+                    </Layout>
+                </ProtectedRoute>
+            }/>
+
             <Route path="/configurar/usuarios" element={
                 <ProtectedRoute accessBy="authenticated" >
                     <Layout>
@@ -64,14 +97,6 @@ export function MyRoutes() {
                 <ProtectedRoute accessBy="authenticated" >
                     <Layout>
                         <Categorias />
-                    </Layout>
-                </ProtectedRoute>
-            }/>
-
-            <Route path="/configurar/productos" element={
-                <ProtectedRoute accessBy="authenticated" >
-                    <Layout>
-                        <Productos />
                     </Layout>
                 </ProtectedRoute>
             }/>
