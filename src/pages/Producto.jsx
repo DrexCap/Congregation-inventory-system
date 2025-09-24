@@ -43,12 +43,20 @@ export function Productos() {
         queryKey: ["Mostrar Marca ", {id_empresa: dataEmpresa?.id}],
         queryFn: () => mostrarMarca({id_empresa: dataEmpresa?.id}),
         enabled: dataEmpresa?.id!=null,
+        refetchOnWindowFocus: false, // evita que se dispare al cambiar de pestaña
+        refetchOnMount: false,       // no vuelve a pedir datos si ya están en cache
+        refetchOnReconnect: false,   // evita refetch al reconectar internet
+        staleTime: Infinity,        // nunca se considera "viejo" → no vuelve a pedir
     });
 
     const { data:dataCategorias} = useQuery({
         queryKey: ["Mostrar Categoria ", {id_empresa: dataEmpresa?.id}],
         queryFn: () => mostrarCategorias({id_empresa: dataEmpresa?.id}),
         enabled: dataEmpresa?.id!=null,
+        refetchOnWindowFocus: false, // evita que se dispare al cambiar de pestaña
+        refetchOnMount: false,       // no vuelve a pedir datos si ya están en cache
+        refetchOnReconnect: false,   // evita refetch al reconectar internet
+        staleTime: Infinity,        // nunca se considera "viejo" → no vuelve a pedir
     });
 
     if(statePermiso==false){

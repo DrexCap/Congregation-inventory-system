@@ -19,6 +19,11 @@ export const Buscador = ({setBuscador, onFocus, funcion,
     }
 
     const buscar2 = (e) => {
+        const value = e.target.value.trim(); // ❌ elimina espacios al inicio y al final
+        if (value === "") {
+            setBuscador("");
+            return;
+        }
         const nomProducto = e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1).toLowerCase();
         setBuscador(nomProducto);
     }

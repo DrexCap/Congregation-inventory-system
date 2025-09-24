@@ -7,14 +7,14 @@ import {
 import { Device } from "../../styles/breackpoints"
 
 export const Tabs = ({data}) => {
-
     const [activeTab, setactiveTab] = useState(0);
+    
     const handleClick = (index) => {
         setactiveTab(index);
     };
 
     return (
-        <Container className="container" activeTab={`${activeTab}00%`}>
+        <Container className="container" $activeTab={`${activeTab}00%`}>
             <ul className="tabs">
                 <li
                     className={activeTab == 0 ? "active" : ""}
@@ -61,6 +61,7 @@ const Container = styled.div`
     border: 1px solid #6a6b6c;
     border-radius:15px;
     height: 100%;
+
     .tabs {
         list-style: none;
         display: flex;
@@ -99,7 +100,7 @@ const Container = styled.div`
             z-index: 1;
             border-radius: 15px;
             transition: 0.25s ease-out;
-            transform: translateX(${(props) => props.activeTab});
+            transform: translateX(${(props) => props.$activeTab});
             box-shadow: 0px 10px 20px -3px #ff5722;
             bottom:0;
         }

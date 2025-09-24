@@ -1,5 +1,6 @@
 
 import styled from "styled-components";
+
 import {useState, useMemo, useEffect} from "react";
 import {
     useReactTable,
@@ -11,20 +12,12 @@ import {
 } from "@tanstack/react-table";
 import {FaArrowsAltV} from "react-icons/fa";
 import Swal from "sweetalert2";
-import { columnasKardex, Paginacion, useKardexStore, v } from "../../../index";
+import { Paginacion, useKardexStore, v, columnasKardex} from "../../../index";
 
 export const TablaKardex = ({ data, setAccion, setDataSelect, setOpenRegistro }) => {
+
     const [pagina, setPagina] = useState(1);
     const { eliminarKardex } = useKardexStore();
-
-    // const [localData, setLocalData] = useState([]);
-
-    // // Actualiza localData cuando data cambia
-    // useEffect(() => {
-    //     if (data && data.length > 0) {
-    //         setLocalData(data);
-    //     }
-    // }, [data]);
 
     const eliminar = (p) => {
         if(p.estado===0){
@@ -64,6 +57,7 @@ export const TablaKardex = ({ data, setAccion, setDataSelect, setOpenRegistro })
     });
 
     return (
+      <>
         <Container>
             <table className="responsive-table">
                 <thead>
@@ -115,6 +109,9 @@ export const TablaKardex = ({ data, setAccion, setDataSelect, setOpenRegistro })
                 maximo={table.getPageCount()}
             />
         </Container>
+
+
+      </>  
     )
 }
 

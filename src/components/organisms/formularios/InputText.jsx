@@ -5,7 +5,9 @@ export function InputText({ children, icono, stilos=false }) {
         <Container
           $stilos={stilos}
         >
-            <span>{icono}</span>
+            <span className="icono">
+              {icono}
+            </span>
 
             <div className="form__group field">
                 {children}
@@ -22,6 +24,12 @@ const Container = styled.div`
   p {
     color: #f46943;
   }
+  
+  .icono {
+    font-size: 21px;
+    color: ${(props) => props.theme.text};
+  }
+  
   .form__group {
     position: relative;
     padding: ${(props)=>props.$stilos?"6px 0 0":"20px 0 0"};
@@ -42,9 +50,9 @@ const Container = styled.div`
     border: none;
     border-bottom: 2px solid #9b9b9b;
     outline: 0;
-    font-size: 17px;
+    font-size: 16px;
     color: ${(props)=>props.theme.text};
-    padding: 7px 0;
+    padding: 6px 0;
     background: transparent;
     transition: border-color 0.2s;
     &.disabled{
@@ -56,8 +64,33 @@ const Container = styled.div`
     }
   }
 
+  .form__fielda {
+    font-family: inherit;
+    width: 100%;
+    min-height: 80px;
+    resize: vertical; /* permite agrandar manualmente */
+    border: 2px solid #9b9b9b;
+    border-radius: 6px;
+    outline: 0;
+    font-size: 16px;
+    color: ${(props) => props.theme.text};
+    padding: 10px;
+    background: transparent;
+    transition: border-color 0.2s;
+  }
+
+  .form__labela {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 17px;
+    color: #9b9b9b;
+    pointer-events: none;
+  }
+
   .form__field::placeholder {
-    color: transparent;
+    /* color: transparent; */
   }
 
   .form__field:placeholder-shown ~ .form__label {
@@ -91,12 +124,38 @@ const Container = styled.div`
     transition: 0.2s;
     font-size: 17px;
     color: #f9632c;
+    font-weight: 600;
+  }
+
+  .form__fielda:focus {
+    padding-bottom: 6px;
+    font-weight: 500;
+    border-width: 2px;
+    border: 2px solid #ec580e;
+    border-radius: 6px;
+    /* border-image: linear-gradient(to right, #ec580e, #f23505); */
+    border-image-slice: 1;
+  }
+
+  .form__fielda:focus ~ .form__label {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 17px;
+    color: #f9632c;
     font-weight: 700;
   }
 
   /* reset input */
   .form__field:required,
   .form__field:invalid {
+    box-shadow: none;
+  }
+
+  /* reset input */
+  .form__fielda:required,
+  .form__fielda:invalid {
     box-shadow: none;
   }
  

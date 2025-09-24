@@ -26,7 +26,10 @@ export const useProductosStore = create((set, get)=>({
         const response = await MostrarProducto(p);
         set({parametros: p});
         set({dataProducto: response});
+        // const {itemProductoCero} = get();
+        // set(itemProductoCero);
         // set({productoItemSelect: response[0]});
+        set({ productoItemSelect: [] });
         return response;
     },
     selectProducto: (p) => {

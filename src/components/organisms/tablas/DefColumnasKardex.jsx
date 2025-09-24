@@ -1,5 +1,7 @@
 
 import styled from "styled-components";
+import { Trazabilidad } from "../../../index";
+import { TrendingDown, TrendingUp, Eye } from "lucide-react";
 import {ContentAccionesTabla} from "../ContentAccionesTabla.jsx";
 import { Device } from "../../../styles/breackpoints";
 
@@ -9,11 +11,13 @@ export const columnasKardex = (eliminar) => {
         {
             accessorKey: "descripcion",
             header: "Producto",
-            cell: (info) => <td data-title="Producto" className="ContentCell">
-                <span >
-                    {info.getValue()}
-                </span>
-            </td>,
+            cell: (info) => (
+                <div data-title="Producto" className="ContentCell">
+                    <span >
+                        {info.getValue()}
+                    </span>
+                </div>
+            ),
             enableColumnFilter: true
         },
         {
@@ -21,9 +25,9 @@ export const columnasKardex = (eliminar) => {
             header: "Fecha",
             enableSorting: false,
             cell: (info) => (
-                <td data-title="Fecha" className="ContentCell">
+                <div data-title="Fecha" className="ContentCell">
                     <span>{info.getValue()}</span>
-                </td>
+                </div>
             ),
             enableColumnFilter: true
         },
@@ -32,34 +36,25 @@ export const columnasKardex = (eliminar) => {
             header: "Tipo",
             enableSorting: false,
             cell: (info) => (
-                <td data-title="Tipo" className="ContentCell">
+                <div data-title="Tipo" className="ContentCell">
                     {info.getValue() == "salida" || info.getValue() == "salidas"  ? (
                         <Colorcontent
                             color="#ed4d4d"
                             className="contentCategoria"
                         >
-                            {info.getValue()}
+                            <TrendingDown size={20} />
+                            {info.getValue().charAt(0).toUpperCase() + info.getValue().slice(1)}
                         </Colorcontent>
                     ) : (
                         <Colorcontent
                             color="#30c85b"
                             className="contentCategoria"
                         >
-                            {info.getValue()}
+                            <TrendingUp size={20} />
+                            {info.getValue().charAt(0).toUpperCase() + info.getValue().slice(1)}
                         </Colorcontent>
                     )}
-                </td>
-            ),
-            enableColumnFilter: true
-        },
-        {
-            accessorKey: "detalle",
-            header: "Detalle",
-            enableSorting: false,
-            cell: (info) => (
-                <td data-title="Detalle" className="ContentCell">
-                    <span >{info.getValue()}</span>
-                </td>
+                </div>
             ),
             enableColumnFilter: true
         },
@@ -68,9 +63,24 @@ export const columnasKardex = (eliminar) => {
             header: "Usuario",
             enableSorting: false,
             cell: (info) => (
-                <td data-title="Usuario" className="ContentCell">
+                <div data-title="Usuario" className="ContentCell">
                     <span>{info.getValue()}</span>
-                </td>
+                </div>
+            ),
+            enableColumnFilter: true
+        },
+        {
+            accessorKey: "documento",
+            header: "Documento",
+            enableSorting: false,
+            cell: (info) => (
+                <div data-title="Documento" className="ContentCell">
+                    <span style={{fontWeight: 600}}>
+
+                        {info.getValue()}
+                        
+                    </span>
+                </div>
             ),
             enableColumnFilter: true
         },
@@ -79,7 +89,7 @@ export const columnasKardex = (eliminar) => {
             header: "Cantidad",
             enableSorting: false,
             cell: (info) => (
-                <td data-title="Cantidad" className="ContentCell">
+                <div data-title="Cantidad" className="ContentCell">
                     { info.row.original.tipo==='salida'?
                         <span style={{color: "#ed4d4d", fontWeight: 700}}>
                             - {info.getValue()}
@@ -88,18 +98,52 @@ export const columnasKardex = (eliminar) => {
                             + {info.getValue()}
                         </span>
                     }
-                </td>
+                </div>
             ),
             enableColumnFilter: true
         },
         {
             accessorKey: "stock_resultante",
-            header: "Stock Resultante",
+            header: "Stock Resul.",
             enableSorting: false,
             cell: (info) => (
-                <td data-title="Stock_Resultante" className="ContentCell">
+                <div data-title="Stock_Resultante" className="ContentCell">
                     <span>{info.getValue()}</span>
-                </td>
+                </div>
+            ),
+            enableColumnFilter: true
+        },
+        // {
+        //     accessorKey: "movimiento",
+        //     header: "Movimiento",
+        //     enableSorting: false,
+        //     cell: (info) => (
+        //         <div data-title="Stock_Resultante" className="ContentCell">
+        //             <span>{info.getValue()}</span>
+        //         </div>
+        //     ),
+        //     enableColumnFilter: true
+        // },
+        {
+            accessorKey: "detalle",
+            header: "Detalle",
+            enableSorting: false,
+            cell: (info) => (
+                <div data-title="Detalle" className="ContentCell">
+                    { 
+                        info.row.original.tipo === "entrada" || info.row.original.tipo === "entradas" ?
+                        <span >Insumo</span> :
+                        <Trazabilidad
+                            id={info.row.original.id}
+                            tipo={info.row.original.tipo}
+                        />
+                    }
+                    {/* <span >{info.getValue()}</span> */}
+                    {/* <Button onClick={() => setOpen(true)}>
+                        <Eye size={16} />
+                        Trazabilidad
+                    </Button> */}
+                </div>
             ),
             enableColumnFilter: true
         },
@@ -108,16 +152,15 @@ export const columnasKardex = (eliminar) => {
             header: "",
             enableSorting: false,
             cell: (info) => (
-                <td className="ContentCell">
+                <div data-title="Acciones" className="ContentCell">
                   <ContentAccionesTabla 
                     funcionEliminar={() => eliminar(info.row.original)}
                   />
-                </td>
+                </div>
             )
         }
     ];
 }   
-
 
 const Colorcontent = styled.div`
   color: ${(props) => props.color};
@@ -127,8 +170,34 @@ const Colorcontent = styled.div`
   padding:3px;
   width:70%;
   font-weight:700;
+
+  display: flex;        /* activamos flexbox */
+  align-items: center;  /* centramos verticalmente */
+  justify-content: center; /* centramos horizontalmente */
+  gap: 6px;                /* separación entre hijos */
+
   @media ${Device.tablet} {
     width:100%;
   }
 `;
+
+const Button = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #111827;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f3f4f6;
+  }
+`;
+
 

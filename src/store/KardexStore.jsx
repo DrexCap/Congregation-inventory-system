@@ -1,6 +1,14 @@
 
 import { create } from "zustand";
-import {BuscarKardex, EditarKardex, MostrarKardex, EliminarKardex, InsertarKardex} from "../index";
+import {
+    BuscarKardex, 
+    EditarKardex, 
+    MostrarKardex, 
+    EliminarKardex, 
+    InsertarKardex, 
+    MostrarDocumentoMovimientoCaratula,
+    GenerarDocumentoMovimiento
+} from "../index";
 
 export const useKardexStore = create((set, get)=>({
     buscador: "",
@@ -12,6 +20,21 @@ export const useKardexStore = create((set, get)=>({
     },
     setBuscador: (p) => {
         set({buscador: p})
+    },
+    dataDocumentosCaratula: [],
+    documentosCaratulaItemSelect: [],
+    selectDocumentoCaratula: (p) => {
+        set({documentosCaratulaItemSelect: p})
+    },
+    mostrarDocumentosMovimientoCaratula: async(p) => {
+        const response = await MostrarDocumentoMovimientoCaratula(p);
+        set({dataDocumentosCaratula: response});
+        set({documentosCaratulaItemSelect: response[0]});
+        return response;
+    },
+    generarDocumentoMovimiento: async(p) => {
+        const response = await GenerarDocumentoMovimiento(p);
+        return response;
     },
     mostrarKardex: async(p) => {
         const response = await MostrarKardex(p);

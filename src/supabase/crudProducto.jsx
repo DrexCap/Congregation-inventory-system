@@ -58,7 +58,9 @@ export const EditarProducto = async(p) => {
 export const BuscarProducto = async(p) => {
     try {
         const {data} = await supabase.rpc("buscarproductos", p);
-        return data;
+        console.log("BuscarProducto", {data});
+
+        return data;        
     } catch (error) {}
 }
 

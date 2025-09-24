@@ -66,7 +66,7 @@ export function ProductoTemplate({data}) {
             </section>
 
             <section className="main">
-                {data.length == 0 && (
+                {data?.length == 0 && (
                     <Lottieanimacion
                         alto="300"
                         ancho="300"

@@ -7,6 +7,7 @@ import {
 } from "../../../index";
 import {v} from "../../../styles/variables"
 import { NavLink } from "react-router-dom";
+import LogoAndre from "../../../assets/logo_andre.png";
 
 // eslint-disable-next-line react/prop-types
 export function Sidebar({ state, setState }) {
@@ -19,9 +20,10 @@ export function Sidebar({ state, setState }) {
             <Container $isopen={state.toString()} className={state ? "active" : ""}>
                 <div className="Logocontent">
                     <div className="imgcontent">
-                        <img src={v.logo} />
+                        <img className="logoStock" src={v.logo} />
                     </div>
                     <h2>StockPRO</h2>
+                    <img className="logoAndre" src={LogoAndre} alt="Logo Andre" style={{ width: "25px", height: "25px" }} />
                 </div>
                 {LinksArray.map(({ icon, label, to }) => (
                     <div
@@ -91,6 +93,7 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     padding-bottom: 60px;
+    gap: 5px;
     .imgcontent {
       display: flex;
       justify-content: center;
@@ -100,10 +103,13 @@ const Container = styled.div`
       transition: 0.3s ease;
       transform: ${({ $isopen }) => ($isopen==="true" ? `scale(0.7)` : `scale(1.5)`)}
         rotate(${({ theme }) => theme.logorotate});
-      img {
+      img.logoStock {
         width: 130%;
         animation: flotar 1.7s ease-in-out infinite alternate;
       }
+    }
+    img.logoAndre {
+      display: ${({ $isopen }) => ($isopen==="true" ? `block` : `none`)};
     }
     h2 {
       display: ${({ $isopen }) => ($isopen==="true" ? `block` : `none`)};

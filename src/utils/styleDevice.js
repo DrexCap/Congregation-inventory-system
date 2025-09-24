@@ -10,14 +10,44 @@ export const styleDevice = (espacioIzquieElem, espacioAbajoElem=null) => {
 
     const izquierda = () => {
         if(width > 2000) {
-            return espacioIzquieElem < 500 ? espacioIzquieElem*0.19 : espacioIzquieElem*0.087;
-        } else if (width > 1000) {
-            if(espacioIzquieElem < 500) {
-                return espacioIzquieElem*0.23
+            if (espacioIzquieElem < 500 ) {
+                return espacioIzquieElem*0.19;
+            } else if (espacioIzquieElem > 1000 ) {
+                return espacioIzquieElem*0.087;
+            } else if (espacioIzquieElem < 960) {
+                return espacioIzquieElem*0.14;
             } else {
-                return espacioIzquieElem*0.109
+                return espacioIzquieElem*0.138;
             }
-            // return espacioIzquieElem < 500 ? espacioIzquieElem*0.23 : espacioIzquieElem*0.109;
+        } else if (width > 1000) {
+            // TODO: Para laptop Form Productos x100
+            if(espacioIzquieElem > 290 && espacioIzquieElem < 300) {
+                return espacioIzquieElem*0.23
+            } else if ( espacioIzquieElem > 850 && espacioIzquieElem < 900 ) {
+                return espacioIzquieElem*0.112
+            } 
+
+            // TODO: Para laptop Form Productos x90 (Normal)
+            if(espacioIzquieElem > 315 && espacioIzquieElem < 320) {
+                return espacioIzquieElem*0.22
+            } else if ( espacioIzquieElem > 950 && espacioIzquieElem < 960 ) {
+                return espacioIzquieElem*0.104
+            } 
+
+            // TODO: Para laptop Form kardex x100
+            if( espacioIzquieElem > 670 && espacioIzquieElem < 680 ) {
+                return espacioIzquieElem*0.191
+            } else if( espacioIzquieElem > 700 && espacioIzquieElem < 730 ) {
+                return espacioIzquieElem*0.189
+            }
+
+            // TODO: Para laptop Form kardex x90
+            if( espacioIzquieElem > 760 && espacioIzquieElem < 765 ) {
+                return espacioIzquieElem*0.169
+            } 
+            else if( espacioIzquieElem > 800 && espacioIzquieElem < 810 ) {
+                return espacioIzquieElem*0.165
+            }
         } else {
             return espacioIzquieElem < 150 ? espacioIzquieElem*0.52 : espacioIzquieElem*0.61;
         }

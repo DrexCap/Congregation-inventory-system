@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {Header} from "../organisms/Header.jsx";
 import {
     Buscador, ContentFiltro, Btnsave, RegistrarSalidaEntrada,
-    useKardexStore, Title, v, Tabs, useProductosStore } from "../../index";
+    useKardexStore, Title, v, Tabs, useProductosStore, useTipoSalidaStore } from "../../index";
 
 export function KardexTemplate({data}) {
     
@@ -16,9 +16,12 @@ export function KardexTemplate({data}) {
 
     const { selectProducto } = useProductosStore();
 
+    const { mostrarTipoSalida } = useTipoSalidaStore();
+
     function cerrarRegistro() {
         SetopenRegistro(!openRegistro);
         selectProducto("");
+        mostrarTipoSalida();
     }
 
     function nuevaEntrada() {

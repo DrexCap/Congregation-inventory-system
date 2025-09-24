@@ -1,5 +1,5 @@
 import { CiPalette } from "react-icons/ci";
-import { BsEmojiLaughing } from "react-icons/bs";
+import { BsEmojiLaughing, BsTextareaT } from "react-icons/bs";
 import { RiDeleteBin2Line, RiEditLine } from "react-icons/ri";
 import { IoIosArrowDown } from "react-icons/io";
 import { RiVipCrownFill } from "react-icons/ri";
@@ -22,24 +22,27 @@ import { SlGraph } from "react-icons/sl";
 import { BsBarChartLine } from "react-icons/bs";
 import { AiOutlineCalculator } from "react-icons/ai";
 import { BsCalendarCheck } from "react-icons/bs";
-import {IoIosArrowForward} from "react-icons/io"
-import {GrFormPrevious,GrCaretNext} from "react-icons/gr"
-import {MdOutlineBorderAll} from "react-icons/md"
+import {IoIosArrowForward} from "react-icons/io";
+import {GrFormPrevious,GrCaretNext} from "react-icons/gr";
+import {MdOutlineBorderAll} from "react-icons/md";
 import { MdAlternateEmail } from "react-icons/md";
-import {RiLockPasswordLine} from "react-icons/ri"
-import {MdDriveFileRenameOutline} from "react-icons/md"
-import {RiStockLine} from "react-icons/ri"
-import {BiBellMinus} from "react-icons/bi"
-import {AiOutlineBarcode} from "react-icons/ai"
-import {DiCodepen} from "react-icons/di"
-import {FaRegMoneyBillAlt} from "react-icons/fa"
-import {CiMoneyBill} from "react-icons/ci"
-import {TbBrandBitbucket} from "react-icons/tb"
-import {MdOutlineCategory} from "react-icons/md"
-import {FaBuilding} from "react-icons/fa"
-import {TbReportAnalytics} from "react-icons/tb"
+import {RiLockPasswordLine} from "react-icons/ri";
+import {MdDriveFileRenameOutline} from "react-icons/md";
+import {RiStockLine} from "react-icons/ri";
+import {BiBellMinus} from "react-icons/bi";
+import {AiOutlineBarcode} from "react-icons/ai";
+import {DiCodepen} from "react-icons/di";
+import {FaRegMoneyBillAlt} from "react-icons/fa";
+import {CiMoneyBill} from "react-icons/ci";
+import {TbBrandBitbucket} from "react-icons/tb";
+import {MdOutlineCategory} from "react-icons/md";
+import {FaBuilding} from "react-icons/fa";
+import {TbReportAnalytics} from "react-icons/tb";
+import { GoNumber } from "react-icons/go";
 
 export const v = {
+    iconoNumero: GoNumber,
+    iconoTextArea:BsTextareaT,
     iconoreportes : TbReportAnalytics,
     iconoempresa:FaBuilding,
     iconocategorias:MdOutlineCategory,
@@ -61,7 +64,6 @@ export const v = {
     xlSpacing: `32px`,
     xxlSpacing: `48px`,
     borderRadius: `6px`,
-
     paletacolores: CiPalette,
     emoji: BsEmojiLaughing,
     iconeditarTabla: RiEditLine,

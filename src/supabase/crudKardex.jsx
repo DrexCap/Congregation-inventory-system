@@ -3,7 +3,7 @@ import   { supabase } from "../index";
 import Swal from "sweetalert2";
 
 export const InsertarKardex = async(p) => {
-    console.log("INSERTAR KARDEX: ", p);
+    console.log("INSERTAR KARDEX: ", {p});
     const {error} = await supabase.from("kardex").insert(p);
     if(error) {
         Swal.fire({
@@ -16,6 +16,7 @@ export const InsertarKardex = async(p) => {
 }
 
 export const MostrarKardex = async(p) => {
+    console.log("MOSTRAR KARDEX: ", p);
     const {data} = await supabase.rpc("mostrarkardexempresa", p)
         .order("id", {ascending: false});
         console.log("INFORMACION DE KARDEX X EMPRESA: ", data);
@@ -59,5 +60,26 @@ export const BuscarKardex = async(p) => {
             buscador: p.buscador,
         })
         .order("id", { ascending: false });
+    return data;
+}
+
+export const MostrarDocumentoMovimientoCaratula = async(p) => {
+    const { data, error } = await supabase.from("kardex_caratula")
+            .select("documento, cantidad").eq("id_empresa", p._id_empresa)
+            .like("documento", "PROD-%") // Filtra los que empiezan con "PROD-"
+            .order("id", { ascending: true });
+    if(error) {
+        return;
+    }
+    console.log("Mostrar Documento Movimiento Caratula ", {data});
+    return data;
+}
+
+export const GenerarDocumentoMovimiento = async(p) => {
+    const {data, error} = await supabase.rpc("generar_documento_movimiento", p)
+    if(error) {
+        return;
+    }
+    console.log("Generar Documento Movimiento Caratula ", {data});
     return data;
 }
