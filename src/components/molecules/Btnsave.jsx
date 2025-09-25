@@ -25,12 +25,12 @@ export function Btnsave({ funcion, titulo, bgcolor, icono, url, loading, formId 
             {loading ? (
               <Loader className="spin" size={20} />
             ) : (
-              <Send size={15} animate={isHovered}  />
+              <Send size={16} animate={isHovered}  />
             )}
           </Icono>
         )}
         <a href={url} target="_blank" rel="noreferrer">
-          {loading ? "Procesando..." : titulo}
+          {loading ? "Guardando..." : titulo}
         </a>
       </span>
     </Container>

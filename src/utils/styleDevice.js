@@ -10,15 +10,33 @@ export const styleDevice = (espacioIzquieElem, espacioAbajoElem=null) => {
 
     const izquierda = () => {
         if(width > 2000) {
-            if (espacioIzquieElem < 500 ) {
+            // TODO: Para Monitor 16' Form Productos x100
+            if (espacioIzquieElem > 360 && espacioIzquieElem < 380 ) {
                 return espacioIzquieElem*0.19;
-            } else if (espacioIzquieElem > 1000 ) {
+            } else if (espacioIzquieElem > 1120 && espacioIzquieElem < 1140 ) {
                 return espacioIzquieElem*0.087;
-            } else if (espacioIzquieElem < 960) {
+            } 
+
+            // TODO: Para Monitor 16' Form Productos x90
+            if (espacioIzquieElem > 380 && espacioIzquieElem < 400 ) {
+                return espacioIzquieElem*0.18;
+            } else if (espacioIzquieElem > 1230 && espacioIzquieElem < 1250) {
+                return espacioIzquieElem*0.08;
+            } 
+            
+            // TODO: Para Monitor 16' Form kardex x100
+            if (espacioIzquieElem > 900 && espacioIzquieElem < 930) {
                 return espacioIzquieElem*0.14;
-            } else {
-                return espacioIzquieElem*0.138;
-            }
+            } else if (espacioIzquieElem > 970 && espacioIzquieElem < 990) {
+                return espacioIzquieElem*0.15;
+            } 
+
+            // TODO: Para Monitor 16' Form kardex x90
+            if (espacioIzquieElem > 1020 && espacioIzquieElem < 1040) {
+                return espacioIzquieElem*0.126;
+            } else if (espacioIzquieElem > 1080 && espacioIzquieElem < 1100) {
+                return espacioIzquieElem*0.135;
+            } 
         } else if (width > 1000) {
             // TODO: Para laptop Form Productos x100
             if(espacioIzquieElem > 290 && espacioIzquieElem < 300) {
@@ -35,19 +53,18 @@ export const styleDevice = (espacioIzquieElem, espacioAbajoElem=null) => {
             } 
 
             // TODO: Para laptop Form kardex x100
-            if( espacioIzquieElem > 670 && espacioIzquieElem < 680 ) {
+            if( espacioIzquieElem > 610 && espacioIzquieElem < 690 ) {
                 return espacioIzquieElem*0.191
             } else if( espacioIzquieElem > 700 && espacioIzquieElem < 730 ) {
-                return espacioIzquieElem*0.189
+                return espacioIzquieElem*0.188
             }
 
             // TODO: Para laptop Form kardex x90
-            if( espacioIzquieElem > 760 && espacioIzquieElem < 765 ) {
+            if( espacioIzquieElem > 740 && espacioIzquieElem < 765 ) {
                 return espacioIzquieElem*0.169
-            } 
-            else if( espacioIzquieElem > 800 && espacioIzquieElem < 810 ) {
+            } else if( espacioIzquieElem > 800 && espacioIzquieElem < 850 ) {
                 return espacioIzquieElem*0.165
-            }
+            } 
         } else {
             return espacioIzquieElem < 150 ? espacioIzquieElem*0.52 : espacioIzquieElem*0.61;
         }

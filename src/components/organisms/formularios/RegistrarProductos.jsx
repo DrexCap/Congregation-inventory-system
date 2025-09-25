@@ -171,7 +171,7 @@ export function RegistrarProductos({ onClose, dataSelect, accion }) {
                             />
                             {
                                 stateMarca && (<ListaGenerica
-                                    bottom="-260px"
+                                    bottom="-225px"
                                     anchoListaGenerica="220px"
                                     scroll="scroll"
                                     data={dataMarca}
@@ -269,7 +269,7 @@ export function RegistrarProductos({ onClose, dataSelect, accion }) {
                             />
                             {
                                 stateCategoria && (<ListaGenerica
-                                    bottom="-260px"
+                                    bottom="-225px"
                                     scroll="scroll"
                                     data={dataCategorias}
                                     funcion={selectCategorias}

@@ -165,7 +165,7 @@ export const StockActualPorProducto = () => {
                             selectProducto(p);
                             setBuscador("");
                         }}
-                        // bottom="360px"
+                        bottom="635px"
                         scroll="scroll"
                         anchoListaGenerica="870px"
                         data={dataProductoBuscador}

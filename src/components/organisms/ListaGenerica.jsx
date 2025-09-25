@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { BtnCerrar } from "../atoms/BtnCerrar.jsx";
 import { styleDevice } from "../../index";
 import { Device } from "../../styles/breackpoints.jsx";
+import { useEffect } from "react";
 
 export const ListaGenerica = ({
   data,
@@ -27,6 +28,12 @@ export const ListaGenerica = ({
     generarDocumento();
     setState();
   }
+
+  useEffect(() => {
+    if (anchoSelector) {
+      console.log({anchoSelector});
+    }
+  }, [anchoSelector]);
 
   return (
     // <Container
@@ -81,9 +88,9 @@ export const ListaGenerica = ({
       $anchoListaGenerica={anchoListaGenerica}
       style={{ marginLeft: `${izquierda()}px` }}
     >
-        <section className="contentClose">
+        {/* <section className="contentClose">
             <BtnCerrar funcion={setState} />
-        </section>
+        </section> */}
 
         <section className="contentItems">
             {(() => {
@@ -91,15 +98,14 @@ export const ListaGenerica = ({
                     let mostrarExtra = true; // bandera para "Generar Documento"
                     return data?.map((item, index) => {
                         if (item.movimiento) {
-                            if (item.movimiento === "Elegir") {
-                                return null;
+                            if (item.movimiento !== "Elegir") {
+                                return (
+                                    <ItemContainer key={index} onClick={() => seleccionar(item)}>
+                                        <span>⚔️</span>
+                                        <span>{item.movimiento}</span>
+                                    </ItemContainer>
+                                );
                             }
-                            return (
-                                <ItemContainer key={index} onClick={() => seleccionar(item)}>
-                                    <span>⚔️</span>
-                                    <span>{item.movimiento}</span>
-                                </ItemContainer>
-                            );
                         } else if (item.descripcion) {
                             return (
                                 <ItemContainer key={index} onClick={() => seleccionar(item)}>
@@ -155,19 +161,20 @@ const Container = styled.div`
   padding: 15px;
   border-radius: 10px;
   z-index: 3;
-  height: 235px;
+  height: 200px;
   @media ${Device.tablet} {
     width: ${(props) =>
       props.$anchoListaGenerica
         ? props.$anchoListaGenerica
         : props.$anchoSelector};
   }
-  .contentClose {
+
+  /* .contentClose {
     margin-left: auto;
-  }
-  
+  } */
+
   .contentItems {
-    //overflow-y: ${(props) => props.$scroll};
+    /* overflow-y: ${(props) => props.$scroll}; */
   }
 
   .contentItems {

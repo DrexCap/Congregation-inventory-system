@@ -1,11 +1,32 @@
 
 import styled from "styled-components";
-import { Trazabilidad } from "../../../index";
+import { Trazabilidad, useKardexStore, useEmpresaStore } from "../../../index";
 import { TrendingDown, TrendingUp, Eye } from "lucide-react";
 import {ContentAccionesTabla} from "../ContentAccionesTabla.jsx";
 import { Device } from "../../../styles/breackpoints";
 
 export const columnasKardex = (eliminar) => {
+
+    // const { dataEmpresa } = useEmpresaStore();
+    // const { verificarDocMovimiento } = useKardexStore();
+
+    const getColorDocumento = (valor) => {
+        const coloresPorPrefijo = {
+            INSU: "#868c96",
+            PROD: "#10B981",
+            CONS: "#8B5CF6",
+            DEV:  "#3B82F6",
+            MER:  "#EF4444",
+            TRAS: "#F59E0B",
+        };
+
+        const prefijo = valor.split("-")[0]; // "INSU" de "INSU-0030"
+        return coloresPorPrefijo[prefijo] || "#000000"; // negro por defecto
+    }
+
+    // const estiloDocumento = (doc) => {
+    //     return verificarDocMovimiento({_id_empresa: dataEmpresa?.id, _documento: doc});
+    // }
 
     return [
         {
@@ -26,7 +47,13 @@ export const columnasKardex = (eliminar) => {
             enableSorting: false,
             cell: (info) => (
                 <div data-title="Fecha" className="ContentCell">
-                    <span>{info.getValue()}</span>
+                    <span>
+                        {new Date(info.getValue()).toLocaleDateString("es-PE", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                        })}
+                    </span>
                 </div>
             ),
             enableColumnFilter: true
@@ -75,10 +102,16 @@ export const columnasKardex = (eliminar) => {
             enableSorting: false,
             cell: (info) => (
                 <div data-title="Documento" className="ContentCell">
-                    <span style={{fontWeight: 600}}>
-
+                    <span
+                        style={{
+                            fontWeight: 600,
+                            color: getColorDocumento(info.getValue()),
+                            // animation: estiloDocumento(info.getValue()) ? 
+                            //     "breathe 2s ease-in-out infinite" : 
+                            //     "none",
+                        }}
+                    >
                         {info.getValue()}
-                        
                     </span>
                 </div>
             ),

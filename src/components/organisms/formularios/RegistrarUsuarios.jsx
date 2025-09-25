@@ -176,7 +176,7 @@ export function RegistrarUsuarios({ onClose, dataSelect, accion }) {
                             {
                                 stateTipodoc && (<ListaGenerica
                                     anchoListaGenerica="220px"
-                                    bottom="-260px"
+                                    bottom="-222px"
                                     scroll="scroll"
                                     data={TipoDocData}
                                     funcion={(p) => setTipodoc(p)}
@@ -257,7 +257,7 @@ export function RegistrarUsuarios({ onClose, dataSelect, accion }) {
                             />
                             {
                                 stateTipoUser && (<ListaGenerica
-                                    bottom="-260px"
+                                    bottom="-222px"
                                     scroll="scroll"
                                     data={TipouserData}
                                     funcion={(p) => setTipouser(p)}

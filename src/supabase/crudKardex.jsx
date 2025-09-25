@@ -83,3 +83,14 @@ export const GenerarDocumentoMovimiento = async(p) => {
     console.log("Generar Documento Movimiento Caratula ", {data});
     return data;
 }
+
+export const VerificarDocMovimiento = async(p) => {
+    const { data, error } = await supabase.from("kardex_caratula")
+        .select("documento").eq("id_empresa", p._id_empresa)
+        .like("documento", p._documento);
+    if(error) {
+        return;
+    }
+    console.log("Mostrar Documento verificado: ", {data});
+    return data;
+}

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import { motion } from "framer-motion";
 import { SquarePen } from "lucide-react";
 import { ListaGenerica, useKardexStore, Selector, ContainerSelector, Loader } from "../../index";
 
 export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDocumento }) => {
     const [fecha, setFecha] = useState("");
+    const [colorDoc, setColorDoc] = useState("#6B7280");
     const [documentoCard, setDocumentoCard] = useState("");
     const [docGenerado, setDocGenerado] = useState("");
 
@@ -16,6 +18,18 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
     const [espacioIzquieElem, setEspacioIzquieElem] = useState(0);
 
     const { generarDocumentoMovimiento } = useKardexStore();
+
+    const coloresSalida = {
+      Merma: "#EF4444",       // rojo
+      Devolución: "#3B82F6",  // azul
+      Producción: "#10B981",  // verde
+      Traslado: "#F59E0B",    // ámbar
+      Consumo: "#8B5CF6",     // violeta
+    };
+
+    function getColorSalida() {
+      return coloresSalida[value] || "#6B7280"; // gris por defecto
+    }
 
     function generarTitulo(tipo) {
       switch (tipo) {
@@ -38,7 +52,7 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
       return Math.floor(Math.random() * (1500 - 900 + 1)) + 900;
     };
 
-    const fakeRequest = (data) => {
+    const fakeRequest2 = (data) => {
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve({data});
@@ -46,10 +60,20 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
       });
     };
 
+    const fakeRequest = (data, getColorSalida) => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const color = getColorSalida(); 
+          resolve({ data, color });
+        }, getRandomNumber()); // 
+      });
+    };
+
     const generarDocumento = async() => {
       const doc = await generarDocumentoMovimiento({tipo_movimiento: value});
       setDocGenerado(doc);
-      const {data} = await fakeRequest(doc);
+      const { data, color } = await fakeRequest(doc, () => getColorSalida(value));
+      setColorDoc(color);
 
       setDocumento(data); //TODO: Guarda el documento para RegistrarSalidaEntrada
       selectItem(data); // TODO: Guarda en el store el documento generado
@@ -57,11 +81,11 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
         setDocumentoCard(data); //TODO: Guarda el documento generado en la CardDatosMovimientos
         setDocumento(data);
       }
-      // setStateDocumento(!stateDocumento) // 1ra vez Muestra la ListaGenerica
-      // setOpenListaDocumento(!openListaDocumento) // 1ra vez no muestra el componente (ListaGenerica y el Selector)
     }
 
     useEffect(() => {
+      console.log("COLOR MOVIMIENTO",getColorSalida());
+      
       if(value !== "Producción") {
         generarDocumento();
       }
@@ -97,7 +121,9 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
                             <Loader size="20px" />
                           </LoaderWrapper>
                         ) : (
-                          <Value>{itemSelect}</Value>
+                          <Value $color={colorDoc} >
+                            {itemSelect}
+                          </Value>
                         )}
                     </Row>
                   ) : openListaDocumento ? (
@@ -116,7 +142,7 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
                             />
                             {
                                 stateDocumento && (<ListaGenerica
-                                    bottom="-200px"
+                                    bottom="-165px"
                                     anchoSelector={ancho}
                                     scroll="scroll"
                                     data={data}
@@ -139,14 +165,23 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
                             <Loader size="20px" />
                           </LoaderWrapper>
                         ) : (
-                          <Value >{documentoCard}</Value>
+                          <Value $color={colorDoc}>
+                            {documentoCard}
+                          </Value>
                         )}
-                      <SquarePen  
-                        size={19} 
-                        color="red"
-                        style={{ cursor: "pointer" }} 
-                        onClick={() => setOpenListaDocumento(!openListaDocumento)} 
-                      />
+                        <motion.div
+                          whileHover={{ scale: 1.2, y: -2 }}
+                          whileTap={{ scale: 0.9, y: 1 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <SquarePen  
+                            size={18} 
+                            color="#f97316"
+                            style={{ cursor: "pointer" }} 
+                            onClick={() => setOpenListaDocumento(!openListaDocumento)} 
+                          />
+                        </motion.div>
                     </Row>
                   )
                 }
@@ -172,13 +207,14 @@ const CardDatosMovimientoOverlay = styled.div`
     /* position: fixed; */
     top: 0;
     left: 0;
+    right: 0;
     width: 100%;
     /* height: 100%; */
     /* background: rgba(0,0,0,0.4); */
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 15px 0;
+    margin: 10px 0;
 `
 const CardDatosMovimientoContainer = styled.div`
     /* width: 300px;
@@ -190,11 +226,11 @@ const CardDatosMovimientoContainer = styled.div`
     border-bottom: 1px solid #f0f0f0; */
 
     background: #fff;
-    border-radius: 12px;
+    border-radius: 15px;
     padding: 20px;
     width: 600px;
     max-width: 100%;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 4px 4px 15px rgba(0,0,0,0.2);
 `
 
 // ==== Estilos internos del modal ====
@@ -247,7 +283,7 @@ const Label = styled.span`
 const Value = styled.span`
   font-weight: 600;
   font-size: 15px;
-  color: ${(props) => props.color || "#000"};
+  color: ${(props) => props.$color || "#000"};
 `;
 
 const LoaderWrapper = styled.div`

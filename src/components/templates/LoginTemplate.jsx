@@ -69,28 +69,34 @@ export function LoginTemplate() {
                     <p className="frase">Controla tu inventario.</p>
 
                     <form onSubmit={handleSubmit(iniciar)}>
-                        <InputText icono={<v.iconoemail />}>
-                            <input
-                                className="form__field"
-                                type="text"
-                                placeholder="email"
-                                {...register("correo", { required: true, })}
-                            />
-                            <label className="form__label">email</label>
-                            {errors.correo?.type === "required" && <p>Campo requerido</p>}
-                        </InputText>
-                        <InputText icono={<v.iconopass />}>
-                            <input
-                                className="form__field"
-                                type="password"
-                                placeholder="contraseña"
-                                {...register("pass", {
-                                    required: true,
-                                })}
-                            />
-                            <label className="form__label">pass</label>
-                            {errors.pass?.type === "required" && <p>Campo requerido</p>}
-                        </InputText>
+                        <article>
+                          <InputText icono={<v.iconoemail />}>
+                              <input
+                                  className="form__field"
+                                  type="text"
+                                  placeholder=""
+                                  {...register("correo", { required: true, })}
+                              />
+                              <label className="form__label">email</label>
+                              {errors.correo?.type === "required" && <p>Campo requerido</p>}
+                          </InputText>
+                        </article>
+
+                        <article>
+                          <InputText icono={<v.iconopass />}>
+                              <input
+                                  className="form__field"
+                                  type="password"
+                                  placeholder=""
+                                  {...register("pass", {
+                                      required: true,
+                                  })}
+                              />
+                              <label className="form__label">Contraseña</label>
+                              {errors.pass?.type === "required" && <p>Campo requerido</p>}
+                          </InputText>
+                        </article>
+
                         <ContainerBtn>
                             <Btnsave titulo="Iniciar" bgcolor="#fc6b32" />
                             <Btnsave

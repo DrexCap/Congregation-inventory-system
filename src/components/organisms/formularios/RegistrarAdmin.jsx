@@ -61,7 +61,7 @@ export function RegistrarAdmin({ setState }) {
                                 <input  className="form__field"
                                         style={{ textTransform: "lowercase" }}
                                         type="text"
-                                        placeholder="correo"
+                                        // placeholder="correo"
                                         {...register("correo", {
                                             required: true,
                                             pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/i,
@@ -78,7 +78,7 @@ export function RegistrarAdmin({ setState }) {
                             <InputText icono={<RiLockPasswordLine />}>
                                 <input  className="form__field"
                                         type="text"
-                                        placeholder="pass"
+                                        // placeholder="pass"
                                         {...register("pass", {
                                             required: true,
                                         })}

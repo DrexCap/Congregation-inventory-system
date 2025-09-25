@@ -7,7 +7,8 @@ import {
     EliminarKardex, 
     InsertarKardex, 
     MostrarDocumentoMovimientoCaratula,
-    GenerarDocumentoMovimiento
+    GenerarDocumentoMovimiento,
+    VerificarDocMovimiento
 } from "../index";
 
 export const useKardexStore = create((set, get)=>({
@@ -34,6 +35,10 @@ export const useKardexStore = create((set, get)=>({
     },
     generarDocumentoMovimiento: async(p) => {
         const response = await GenerarDocumentoMovimiento(p);
+        return response;
+    },
+    verificarDocMovimiento: async(p) => {
+        const response = await VerificarDocMovimiento(p);
         return response;
     },
     mostrarKardex: async(p) => {

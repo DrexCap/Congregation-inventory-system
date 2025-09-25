@@ -36,6 +36,7 @@ export * from "./components/atoms/ContentFiltro";
 export * from "./components/atoms/ColorContent";
 export * from "./components/atoms/ColorContentTabla";
 export * from "./components/atoms/ContainerSelector";
+export * from "./components/atoms/ContainerSelector2";
 export * from "./components/molecules/Btnsave";
 export * from "./components/molecules/Lottieanimacion";
 export * from "./components/molecules/SpinnerDocumento";

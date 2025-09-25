@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import {useQuery} from "@tanstack/react-query";
 import { v } from "../../../styles/variables";
@@ -12,20 +12,26 @@ import {
   Selector,
   useProductosStore,
   useTipoSalidaStore,
-  ContainerSelector,
+  ContainerSelector2,
   ListaGenerica,
   CardDatosMovimiento,
 } from "../../../index";
 import { Controller, useForm } from "react-hook-form";
+import { motion, AnimatePresence } from "framer-motion";
 import { SquareX } from "../../../components/animate-ui/icons/square-x";
 
 export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
     const [focused, setFocused] = useState(false);
+    const [anchoSelectorBus, setAnchoSelectorBus] = useState(0);
     const [stateListaProd, SetstateListaProd] = useState(false);
     const [stateTipoSalida, setStateTipoSalida] = useState(false);
     const [documento, setDocumento] = useState("");
 
     const [loading, setLoading] = useState(false);
+
+    // TODO: Para ver si se activo el scroll
+    const contenedorRef = useRef(null);
+    const [tieneScroll, setTieneScroll] = useState(false);
 
     const { idusuario } = useUserStore();
     const { dataTipoSalida, selectTipoSalida, tipoSalidaItemSelect } = useTipoSalidaStore();
@@ -42,11 +48,22 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
     } = useKardexStore();
 
     useEffect(() => {
+        // Esto es para desactivar el scroll de la home cuando se habre la ventala de registro
         document.body.style.overflow = "hidden";
         return () => {
             document.body.style.overflow = "auto"; // restaurar al cerrar
         };
     }, []);
+
+    function toggleTipoSalida() {
+        setStateTipoSalida(!stateTipoSalida);
+        setTimeout(() => {
+            if (contenedorRef.current) {
+                const { scrollHeight, clientHeight } = contenedorRef.current;
+                setTieneScroll(scrollHeight > clientHeight);
+            }
+        }, 0);
+    }
 
     const {
         control,
@@ -111,6 +128,7 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
     return (
         <Container>
             <div className="sub-contenedor">
+                
                 <div className="headers">
                     <section>
                         <h1>{accion == "Editar" ? "Editar kardex" : "Registrar " + tipo}</h1>
@@ -121,70 +139,71 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                             <SquareX size={28} animateOnHover />
                         </span>
                     </section>
-                </div>
-
-                <div className="contentBuscador">
-                    {/* ✅ VALIDAR PRODUCTO */}
-                    <Controller
-                        name="producto"
-                        control={control}
-                        rules={{ required: "Debes seleccionar un producto" }}
-                        render={({ field }) => (
-                            <>
-                                <div onClick={() => SetstateListaProd(!stateListaProd)}>
-                                    <Buscador
-                                        buscarProducto={true}
-                                        setBuscador={setBuscador}
-                                        setEspacioIzquieElem={setEspacioIzquieElem}
-                                        onFocus={() => setFocused(true)}
-                                    />
-                                </div>
-
-                                {stateListaProd && (
-                                    <ListaGenerica
-                                        bottom="-250px"
-                                        scroll="scroll"
-                                        espacioIzquieElem={espacioIzquieElem}
-                                        anchoListaGenerica="430px"
-                                        setState={() => SetstateListaProd(!stateListaProd)}
-                                        data={buscarData ?? []}
-                                        funcion={(p) => {
-                                            selectProducto(p);      // tu store
-                                            setBuscador("");        // limpias buscador
-                                            field.onChange(p.id);   // ✅ sincronizas con RHF
-                                        }}
-                                    />
-                                )}
-                            </>
-                        )}
-                    />
-                </div>
-                {errors.producto && (
-                    <p style={{ color: "#f46943", fontSize: "14px", marginTop: "5px" }}>
-                        ⚠️ {errors.producto.message}
-                    </p>
-                )}
-
-                {/*TODO: OJO Cambiar el estilo para esta card */}
-                <CardProducto $tipo={tipo}>
-                    <span
-                        style={{
-                            color: tipo === "entrada" ? "#1fee61" : "#f04f4f",
-                            fontWeight: "bold",
-                        }}
-                    >
-                        {productoItemSelect?.descripcion}
-                    </span>
-
-                    <span style={{ color: (theme) => theme.text }}>
-                        Stock Actual: {productoItemSelect?.stock}
-                    </span>
-                </CardProducto>
+                </div>            
 
                 <form className="formulario" onSubmit={handleSubmit(insertar)}>
-                    <section>
+                    <section ref={contenedorRef} className="contenedor-formulario">
+                        <div className="contentBuscador">
+                            {/* ✅ VALIDAR PRODUCTO */}
+                            <Controller
+                                name="producto"
+                                control={control}
+                                rules={{ required: "Debes seleccionar un producto" }}
+                                render={({ field }) => (
+                                    <>
+                                        <div onClick={() => SetstateListaProd(!stateListaProd)}>
+                                            <Buscador
+                                                setAnchoSelector={setAnchoSelectorBus}
+                                                buscarProducto={true}
+                                                setBuscador={setBuscador}
+                                                setEspacioIzquieElem={setEspacioIzquieElem}
+                                                onFocus={() => setFocused(true)}
+                                            />
+                                        </div>
+
+                                        {stateListaProd && (
+                                            <ListaGenerica
+                                                bottom="-220px"
+                                                scroll="scroll"
+                                                espacioIzquieElem={espacioIzquieElem}
+                                                anchoListaGenerica={anchoSelectorBus+'px'}
+                                                setState={() => SetstateListaProd(!stateListaProd)}
+                                                data={buscarData ?? []}
+                                                funcion={(p) => {
+                                                    selectProducto(p);      // tu store
+                                                    setBuscador("");        // limpias buscador
+                                                    field.onChange(p.id);   // ✅ sincronizas con RHF
+                                                }}
+                                            />
+                                        )}
+                                    </>
+                                )}
+                            />
+                        </div>
+                        {errors.producto && (
+                            <p style={{ color: "#f46943", fontSize: "14px", marginTop: "5px" }}>
+                                ⚠️ {errors.producto.message}
+                            </p>
+                        )}
+
+                        {/*TODO: OJO Cambiar el estilo para esta card */}
+                        <CardProducto $tipo={tipo}>
+                            <span
+                                style={{
+                                    color: tipo === "entrada" ? "#1fee61" : "#f04f4f",
+                                    fontWeight: "bold",
+                                }}
+                            >
+                                {productoItemSelect?.descripcion}
+                            </span>
+
+                            <span style={{ color: (theme) => theme.text }}>
+                                Stock Actual: {productoItemSelect?.stock}
+                            </span>
+                        </CardProducto>
+
                         {tipo === "salida" && (
-                            <ContainerSelector>
+                            <ContainerSelector2>
                                 <label for="marca">Tipo de Salida: </label>
                                 <Controller 
                                     name="tipoSalida"
@@ -193,9 +212,7 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                                     render={({ field }) => (
                                         <>
                                             <Selector
-                                                funcion={() => {
-                                                    setStateTipoSalida(!stateTipoSalida)
-                                                }}
+                                                funcion={toggleTipoSalida}
                                                 state={stateTipoSalida}
                                                 ancho={true}
                                                 setAncho={setAncho}
@@ -207,8 +224,10 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
 
                                             {stateTipoSalida && (
                                                 <ListaGenerica
-                                                    bottom="-260px"
-                                                    anchoSelector={ancho}
+                                                    bottom="-220px"
+                                                    anchoSelector={
+                                                        tieneScroll?ancho-6:ancho
+                                                    }
                                                     scroll="scroll"
                                                     data={dataTipoSalida}
                                                     setState={() => setStateTipoSalida(!stateTipoSalida)}
@@ -223,23 +242,34 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                                         </>
                                     )}
                                 />
-                            </ContainerSelector>
+                            </ContainerSelector2>
                         )}
                         {(errors.tipoSalida) && (
-                            <p style={{ color: "#f46943", fontSize: "14px", marginTop: "5px" }}>
+                            <p style={{ color: "#f46943", fontSize: "14px", 
+                                marginTop: "3px", marginBottom: "5px" }}>
                                 ⚠️ {errors.tipoSalida.message}
                             </p>
                         )}
 
-                        {tipoSalidaItemSelect?.movimiento !== "Elegir" && (
-                            <CardDatosMovimiento
-                                data={dataDocumentosCaratula}
-                                itemSelect={documentosCaratulaItemSelect}
-                                selectItem={selectDocumentoCaratula}
-                                value={tipoSalidaItemSelect?.movimiento}
-                                setDocumento={setDocumento}
-                            />
-                        )}
+                        <AnimatePresence>
+                            {tipoSalidaItemSelect?.movimiento !== "Elegir" && (
+                                <motion.div
+                                    key="card-datos-mov"
+                                    initial={{ opacity: 0, y: 15, scale: 0.97 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: -15, scale: 0.97 }}
+                                    transition={{ duration: 0.5, ease: "easeOut" }}
+                                >
+                                    <CardDatosMovimiento
+                                        data={dataDocumentosCaratula}
+                                        itemSelect={documentosCaratulaItemSelect}
+                                        selectItem={selectDocumentoCaratula}
+                                        value={tipoSalidaItemSelect?.movimiento}
+                                        setDocumento={setDocumento}
+                                    />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
 
                         <article>
                             <InputText icono={<v.iconoNumero />}>
@@ -247,7 +277,6 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                                     className="form__field"
                                     defaultValue={dataSelect.descripcion}
                                     type="number"
-                                    step="1"
                                     placeholder=""
                                     {...register("cantidad", {
                                         required: true,
@@ -279,17 +308,17 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                                 }
                             </InputText>
                         </article>
-
-                        <div className="btnguardarContent">
-                            <Btnsave
-                                icono={<v.iconoguardar />}
-                                titulo="Guardar"
-                                bgcolor="#ef552b"
-                                loading={loading}
-                                errors={errors}
-                            />
-                        </div>
                     </section>
+
+                    <div className="btnguardarContent">
+                        <Btnsave
+                            icono={<v.iconoguardar />}
+                            titulo="Enviar"
+                            bgcolor="#ef552b"
+                            loading={loading}
+                            errors={errors}
+                        />
+                    </div>
                 </form>
             </div>
         </Container>
@@ -298,6 +327,7 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
 
 const Container = styled.div`
   transition: 0.5s;
+  /* padding-right: 6px; */
   top: 0;
   left: 0;
   position: fixed;
@@ -310,7 +340,7 @@ const Container = styled.div`
   z-index: 1000;
 
   .sub-contenedor {
-    width: 500px;
+    width: 520px;
     max-width: 85%;
     border-radius: 20px;
     background: ${({ theme }) => theme.bgtotal};
@@ -334,33 +364,66 @@ const Container = styled.div`
         cursor: pointer;
       }
     }
+
     .contentBuscador {
       position: relative;
     }
+
     .formulario {
-      section {
-        gap: 10px;
         display: flex;
         flex-direction: column;
+        max-height: 85vh;
+
+        section {
+            /* flex: 1; */
+            gap: 4px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 6px;
+
+            textarea::placeholder {
+                font-size: 17px;
+            }
+
+            textarea:focus::placeholder {
+                color: #8B8C8D; /* cambia el color al hacer focus */
+                font-weight: 500;
+            }
+        }
+
+        section::-webkit-scrollbar {
+            width: 8px; /* Ancho del scrollbar */
+        }
+
+        section::-webkit-scrollbar-track {
+            background: #555; /* Color de fondo de la pista */
+            border-radius: 10px; /* Bordes redondeados para la pista */
+        }
+
+        section::-webkit-scrollbar-thumb {
+            background: #f97316; /* Color del pulgar (gris ceniza) */
+            border-radius: 8px; /* Bordes redondeados para el pulgar */
+            border: 2px solid #f1f1f1; /* Espacio alrededor del pulgar */
+        }
+
+        section > * {
+            flex-shrink: 0;  /* 🚀 evita que hijos como CardProducto se aplasten */
+        }
 
         .btnguardarContent {
-            align-self: flex-end;
-            margin-top: 10px; /* 🚀 botón a la derecha */
+            display: flex;
+            justify-content: flex-end; /* 🚀 botón pegado a la derecha */
+            margin-top: 8px; 
+            padding-top: 8px;
         }
-
-        .colorContainer {
-          .colorPickerContent {
-            padding-top: 15px;
-            min-height: 50px;
-          }
-        }
-      }
     }
   }
 `;
 
 const CardProducto = styled.section`
-  margin-top: 10px;
+  margin-top: 9px;
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
@@ -373,3 +436,4 @@ const CardProducto = styled.section`
       : "rgba(239, 56, 56, 0.1)"};
   padding: 10px;
 `;
+

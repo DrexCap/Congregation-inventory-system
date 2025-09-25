@@ -3,13 +3,16 @@ import {FaSearch} from "react-icons/fa";
 import {useEffect, useRef} from "react";
 
 export const Buscador = ({setBuscador, onFocus, funcion, 
-                            buscarProducto=false, setEspacioAbajoElem=null}) => {
+                            buscarProducto=false, setEspacioAbajoElem=null, setAnchoSelector }) => {
 
     const cajaRef = useRef(null);
 
     useEffect(() => {
         if (cajaRef.current) {
             const bottom = cajaRef.current.getBoundingClientRect().bottom;
+            if (typeof setAnchoSelector === "function") {
+                setAnchoSelector(cajaRef.current.offsetWidth);
+            }
             if(setEspacioAbajoElem) { setEspacioAbajoElem(bottom); }
         }
     }, []);
@@ -41,7 +44,7 @@ export const Buscador = ({setBuscador, onFocus, funcion,
         >
             <article className="content">
                 <FaSearch className="icono"/>
-                <input onFocus={onFocus} onChange={buscarProducto?buscar2:buscar} placeholder="...Buscar"/>
+                <input onFocus={onFocus} onChange={buscarProducto?buscar2:buscar} placeholder="...Buscar Producto"/>
             </article>
         </Container>
     );
@@ -70,6 +73,15 @@ const Container = styled.div`
             background: none;
             border: 0;
             color: ${(props)=>props.theme.text};
+
+            &::placeholder {
+                font-size: 17px;
+            }
+
+            &:focus::placeholder {
+                color: #8B8C8D; /* cambia el color al hacer focus */
+                font-weight: 500;
+            }
         }
     }
 `;
