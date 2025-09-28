@@ -4,6 +4,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.contentsvg svg {
+  opacity: 1 !important;
+  display: block !important;
+}
+
+/* @keyframes breathe {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+} */
+
+@keyframes breathe {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    text-shadow: 0 0 0 rgb(46, 182, 44); 
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.02);
+    text-shadow: 0 0 0 rgb(131, 212, 117); 
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    text-shadow: 0 0 0 rgb(46, 182, 44);
+  }
+}
+
 /* @tailwind base;
 
 @plugin "tailwindcss-animate";

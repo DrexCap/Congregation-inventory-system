@@ -2,6 +2,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import AnimatedGif from "../../assets/ojos.gif"; // 👈 tu JSON descargado
+import Vista from "../../assets/vista.png";
 import { Eye } from "lucide-react"; // 👀 ícono
 
 // ==== Botón estilo de la imagen ====
@@ -26,6 +27,7 @@ const Button1 = styled.button`
 
 const Button = styled.button`
   gap: 6px;
+  display: flex;
   color: #111827;
   align-items: center;
   background-color: #f9fafb;
@@ -163,15 +165,18 @@ const Badge = styled.span`
 `;
 
 // ==== Componente Principal ====
-export function Trazabilidad({id, tipo}) {
+export function Trazabilidad({id, tipo, documento, verificarDoc}) {
   const [open, setOpen] = useState(false);
 
   return (
     <div>
       {/* Botón que abre el modal */}
       <Button onClick={() => setOpen(true)}>
-        <img src={AnimatedGif} alt="icono animado" style={{ width: "24px", height: "24px" }} />
-        {/* <Eye size={16} /> */}
+        {documento?.startsWith("PROD-") ? (
+            !verificarDoc(documento) && 
+              <img src={AnimatedGif} alt="icono animado" style={{ width: 26, height: 26 }} />
+          ) : <img src={Vista} alt="icono estatico" style={{ width: 21, height: 21 }} />
+        }
         Trazabilidad
       </Button>
 

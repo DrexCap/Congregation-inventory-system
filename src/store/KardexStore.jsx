@@ -8,7 +8,8 @@ import {
     InsertarKardex, 
     MostrarDocumentoMovimientoCaratula,
     GenerarDocumentoMovimiento,
-    VerificarDocMovimiento
+    VerificarDocMovimiento,
+    GetdocKardex
 } from "../index";
 
 export const useKardexStore = create((set, get)=>({
@@ -31,6 +32,10 @@ export const useKardexStore = create((set, get)=>({
         const response = await MostrarDocumentoMovimientoCaratula(p);
         set({dataDocumentosCaratula: response});
         set({documentosCaratulaItemSelect: response[0]});
+        return response;
+    },
+    getdocKardex: async(p) => {
+        const response = await GetdocKardex(p);
         return response;
     },
     generarDocumentoMovimiento: async(p) => {

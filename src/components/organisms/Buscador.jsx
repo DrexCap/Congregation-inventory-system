@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import {FaSearch} from "react-icons/fa";
+// import {FaSearch} from "react-icons/fa";
+import { PackageSearch } from "lucide-react";
 import {useEffect, useRef} from "react";
 
 export const Buscador = ({setBuscador, onFocus, funcion, 
@@ -43,7 +44,7 @@ export const Buscador = ({setBuscador, onFocus, funcion,
             ref={cajaRef}
         >
             <article className="content">
-                <FaSearch className="icono"/>
+                <PackageSearch size={27} />
                 <input onFocus={onFocus} onChange={buscarProducto?buscar2:buscar} placeholder="...Buscar Producto"/>
             </article>
         </Container>

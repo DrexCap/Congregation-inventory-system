@@ -1,5 +1,5 @@
 import { v } from "../styles/variables";
-
+import { Blocks } from "../components/animate-ui/icons/blocks"
 import {
     AiOutlineHome,
     AiOutlineSetting,
@@ -27,17 +27,18 @@ export const DesplegableUser = [
 export const LinksArray = [
     {
         label: "Home",
-        icon: <AiOutlineHome />,
+        icon: AiOutlineHome,
         to: "/",
     },
     {
         label: "Kardex",
-        icon: <v.iconocategorias />,
+        icon: Blocks,
         to: "/kardex",
+        animateOnHover: true,
     },
     {
         label: "Reportes",
-        icon: <v.iconoreportes />,
+        icon: v.iconoreportes,
         to: "/reportes",
     },
 ];

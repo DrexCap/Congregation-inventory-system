@@ -28,6 +28,7 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
     const [documento, setDocumento] = useState("");
 
     const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     // TODO: Para ver si se activo el scroll
     const contenedorRef = useRef(null);
@@ -89,7 +90,7 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                 stockResultante = productoItemSelect.stock + parseFloat(data.cantidad);
             }
             if (tipo === "entrada") {
-                doc = await generarDocumentoMovimiento({tipo_movimiento: "Insumo"});
+                doc = await generarDocumentoMovimiento({ tipo_movimiento: "Insumo" });
             }
             const p = {
                 fecha: new Date(),
@@ -103,11 +104,20 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                 documento: tipo === "entrada" ? doc : documento,
                 id_tipo_salida: tipo === "entrada" ? 8 : tipoSalidaItemSelect?.id,
             };
-            console.log("parametros Kardex",{p});
-            
+            console.log("parametros Kardex", { p });
+
             await insertarKardex(p);
-            selectProducto("");
-            onClose();
+
+            setSuccess(true);
+            
+            setTimeout(() => {
+                setSuccess(false);
+                selectProducto("");
+                onClose();  // 🔥 cierra después de mostrar "Guardado!"
+            }, 1600);
+            
+        } catch (error) {
+            console.error("Error al insertar", error);
         } finally {
             setLoading(false); // 🔓 vuelve a habilitar
         }
@@ -118,11 +128,11 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                 _id_empresa: dataEmpresa.id,
                 buscador: buscador
             }],
-            queryFn: () => buscarProducto({
-                _id_empresa: dataEmpresa.id,
-                buscador: buscador
-            }),
-            enabled: dataEmpresa?.id!=null
+        queryFn: () => buscarProducto({
+            _id_empresa: dataEmpresa.id,
+            buscador: buscador
+        }),
+        enabled: dataEmpresa?.id!=null,
     });
 
     return (
@@ -188,16 +198,19 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
 
                         {/*TODO: OJO Cambiar el estilo para esta card */}
                         <CardProducto $tipo={tipo}>
-                            <span
-                                style={{
-                                    color: tipo === "entrada" ? "#1fee61" : "#f04f4f",
-                                    fontWeight: "bold",
-                                }}
-                            >
-                                {productoItemSelect?.descripcion}
-                            </span>
+                            { 
+                                productoItemSelect?.descripcion &&
+                                <span
+                                    style={{
+                                        color: tipo === "entrada" ? "#1fee61" : "#f04f4f",
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    {productoItemSelect?.descripcion}
+                                </span>
+                            }
 
-                            <span style={{ color: (theme) => theme.text }}>
+                            <span style={{ color: (theme) => theme.text, fontWeight: 450 }}>
                                 Stock Actual: {productoItemSelect?.stock}
                             </span>
                         </CardProducto>
@@ -312,11 +325,12 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
 
                     <div className="btnguardarContent">
                         <Btnsave
-                            icono={<v.iconoguardar />}
+                            icono="Enviar"
                             titulo="Enviar"
                             bgcolor="#ef552b"
                             loading={loading}
                             errors={errors}
+                            success={success}
                         />
                     </div>
                 </form>
@@ -326,12 +340,13 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
 }
 
 const Container = styled.div`
-  transition: 0.5s;
+  /* transition: 0.5s; */
   /* padding-right: 6px; */
   top: 0;
   left: 0;
+  /* position: sticky; */
   position: fixed;
-  background-color: rgba(10, 9, 9, 0.5);
+  /* background-color: rgba(10, 9, 9, 0.5); */
   display: flex;
   width: 100%;
   min-height: 100vh;
@@ -340,11 +355,12 @@ const Container = styled.div`
   z-index: 1000;
 
   .sub-contenedor {
+
     width: 520px;
     max-width: 85%;
     border-radius: 20px;
     background: ${({ theme }) => theme.bgtotal};
-    box-shadow: -10px 15px 30px rgba(10, 9, 9, 0.4);
+    box-shadow: -5px 15px 30px rgba(10, 9, 9, 0.4);
     padding: 13px 36px 20px 36px;
     z-index: 100;
 
@@ -424,6 +440,7 @@ const Container = styled.div`
 
 const CardProducto = styled.section`
   margin-top: 9px;
+  align-item: center;
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;

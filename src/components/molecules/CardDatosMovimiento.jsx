@@ -52,13 +52,13 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
       return Math.floor(Math.random() * (1500 - 900 + 1)) + 900;
     };
 
-    const fakeRequest2 = (data) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({data});
-        }, getRandomNumber()); // 2 segundos
-      });
-    };
+    // const fakeRequest2 = (data) => {
+    //   return new Promise((resolve) => {
+    //     setTimeout(() => {
+    //       resolve({data});
+    //     }, getRandomNumber()); // 2 segundos
+    //   });
+    // };
 
     const fakeRequest = (data, getColorSalida) => {
       return new Promise((resolve) => {
@@ -79,7 +79,7 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
       selectItem(data); // TODO: Guarda en el store el documento generado
       if (value === "Producción") {
         setDocumentoCard(data); //TODO: Guarda el documento generado en la CardDatosMovimientos
-        setDocumento(data);
+        // setDocumento(data);
       }
     }
 
@@ -159,7 +159,7 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
                     </Row>
                   ) : (
                     <Row>
-                      <Label>Documento de movimiento: </Label>
+                        <Label>Documento de movimiento: </Label>
                         { documentoCard!==docGenerado ? (
                           <LoaderWrapper size="100px">
                             <Loader size="20px" />

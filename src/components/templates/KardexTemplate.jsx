@@ -1,5 +1,7 @@
 import {useState} from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import styled from "styled-components";
+import { PackagePlus, PackageMinus } from "lucide-react"
 import {Header} from "../organisms/Header.jsx";
 import {
     Buscador, ContentFiltro, Btnsave, RegistrarSalidaEntrada,
@@ -37,14 +39,25 @@ export function KardexTemplate({data}) {
     return (
         <Container>
 
-            { openRegistro && (
-                <RegistrarSalidaEntrada
-                    tipo={tipo}
-                    dataSelect={dataSelect}
-                    onClose={cerrarRegistro}
-                    accion={accion}
-                />
-            )}
+            <AnimatePresence>
+                { openRegistro && (
+                    <ModalWrapper
+                        key="registro-form"
+                        initial={{ opacity: 0, y: -35 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -35 }} // igual que initial
+                        transition={{ duration: 0.36, ease: "easeInOut" }}
+                    >
+                        <RegistrarSalidaEntrada
+                            tipo={tipo}
+                            dataSelect={dataSelect}
+                            onClose={cerrarRegistro}
+                            accion={accion}
+                        />
+                    </ModalWrapper>
+                )}
+            </AnimatePresence>
+
 
             <header className="header">
                 <Header
@@ -58,13 +71,15 @@ export function KardexTemplate({data}) {
                         Kardex
                     </Title>
                     <Btnsave
-                        titulo="+ Entrada"
+                        icono={<PackagePlus />}
+                        titulo="Entrada"
                         bgcolor="#52de65"
                         funcion={nuevaEntrada}
                     />
 
                     <Btnsave
-                        titulo="- Salida"
+                        icono={<PackageMinus />}
+                        titulo="Salida"
                         bgcolor="#fb6661"
                         funcion={nuevaSalida}
                     />
@@ -124,4 +139,15 @@ const Container = styled.div`
     }
 `;
 
-
+const ModalWrapper = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  /* background: rgba(0, 0, 0, 0.4); // opcional: fondo semitransparente */
+`;

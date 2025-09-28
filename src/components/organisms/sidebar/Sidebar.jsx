@@ -1,3 +1,5 @@
+
+import { useState } from "react";
 import styled from "styled-components";
 import {
     LinksArray,
@@ -5,12 +7,17 @@ import {
     SidebarCard,
     ToggleTema,
 } from "../../../index";
+import { motion } from "framer-motion";
 import {v} from "../../../styles/variables"
 import { NavLink } from "react-router-dom";
+import { Settings } from "../../animate-ui/icons/settings"
 import LogoAndre from "../../../assets/logo_andre.png";
 
 // eslint-disable-next-line react/prop-types
 export function Sidebar({ state, setState }) {
+
+    const [hoveredIndex, setHoveredIndex] = useState(null);
+    const [isHovered, setHovered] = useState(null);
 
     return (
         <Main $isopen={state.toString()}>
@@ -25,19 +32,33 @@ export function Sidebar({ state, setState }) {
                     <h2>StockPRO</h2>
                     <img className="logoAndre" src={LogoAndre} alt="Logo Andre" style={{ width: "25px", height: "25px" }} />
                 </div>
-                {LinksArray.map(({ icon, label, to }) => (
+                {LinksArray.map(({ icon: Icon, label, to, animateOnHover }, index) => (
                     <div
                         className={state ? "LinkContainer active" : "LinkContainer"}
                         key={label}
                     >
                         <NavLink
-                            to={to}
-                            className={({ isActive }) => `Links${isActive ? ` active` : ``}`}
+                          to={to}
+                          className={({ isActive }) => `Links${isActive ? ` active` : ``}`}
+                          onMouseEnter={() => setHoveredIndex(index)}
+                          onMouseLeave={() => setHoveredIndex(null)}
                         >
-                            <div className="Linkicon">{icon}</div>
-                            <span className={state ? "label_ver" : "label_oculto"}>
-                                {label}
-                            </span>
+                          <div className="Linkicon">
+                            <motion.div
+                              animate={hoveredIndex === index ? { scale: 1.1, y: -1 } : { scale: 1, y: 0 }}
+                              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                              style={{ display: "flex", alignItems: "center" }}
+                            >
+                              { animateOnHover ? (
+                                <Icon animate={hoveredIndex === index} size={21.5} />
+                              ) : (
+                                <Icon  />
+                              )}
+                            </motion.div>
+                          </div>
+                          <span className={state ? "label_ver" : "label_oculto"}>
+                            {label}
+                          </span>
                         </NavLink>
                     </div>
                 ))}
@@ -50,8 +71,18 @@ export function Sidebar({ state, setState }) {
                         <NavLink
                             to={to}
                             className={({ isActive }) => `Links${isActive ? ` active` : ``}`}
+                            onMouseEnter={() => setHovered(true)}
+                            onMouseLeave={() => setHovered(false)}
                         >
-                            <div className="Linkicon">{icon}</div>
+                            <div className="Linkicon">
+                              <motion.div
+                                animate={ isHovered ? { scale: 1.1, y: -1 } : { scale: 1, y: 0 }}
+                                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                style={{ display: "flex", alignItems: "center" }}
+                              >
+                                <Settings size={21.5} animate={isHovered} />
+                              </motion.div>
+                            </div>
                             <span className={state ? "label_ver" : "label_oculto"}>
                                 {label}
                             </span>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { PackageCheck } from "lucide-react"
 import {
     v,
     TablaKardex,
@@ -20,8 +21,8 @@ export const Tabs = ({data}) => {
                     className={activeTab == 0 ? "active" : ""}
                     onClick={() => handleClick(0)}
                 >
-                    {<v.iconopie />}
-                    Kardex
+                    {<PackageCheck />}
+                    Suministros
                 </li>
 
                 {/* <li

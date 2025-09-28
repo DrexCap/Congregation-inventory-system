@@ -1,7 +1,7 @@
 
 import styled from "styled-components";
 
-import {useState, useMemo, useEffect} from "react";
+import {useState, useMemo, useEffect, useRef} from "react";
 import {
     useReactTable,
     getCoreRowModel,
@@ -12,12 +12,35 @@ import {
 } from "@tanstack/react-table";
 import {FaArrowsAltV} from "react-icons/fa";
 import Swal from "sweetalert2";
-import { Paginacion, useKardexStore, v, columnasKardex} from "../../../index";
+import { Paginacion, useKardexStore, useEmpresaStore, v, columnasKardex} from "../../../index";
 
 export const TablaKardex = ({ data, setAccion, setDataSelect, setOpenRegistro }) => {
 
-    const [pagina, setPagina] = useState(1);
-    const { eliminarKardex } = useKardexStore();
+    const { eliminarKardex, verificarDocMovimiento, getdocKardex } = useKardexStore();
+    const { dataEmpresa } = useEmpresaStore();
+
+    const [pagination, setPagination] = useState(() => {
+      const saved = localStorage.getItem("kardexPagination");
+      return saved ? JSON.parse(saved) : { pageIndex: 0, pageSize: 10 };
+    });
+
+    const renderCount = useRef(0);
+
+    renderCount.current += 1;
+
+    useEffect(() => {
+      console.log(`🔄 El componente se renderizó ${renderCount.current} veces`);
+      
+      localStorage.setItem("kardexPagination", JSON.stringify(pagination));
+
+      const fetchDocs = async () => {
+        const documentos = await getdocKardex({ _id_empresa: dataEmpresa?.id });
+        console.log("Docs consultados:", documentos);
+        localStorage.setItem("getDocumentos", JSON.stringify(documentos));
+      };
+
+      fetchDocs();
+    }, [pagination, dataEmpresa?.id]);
 
     const eliminar = (p) => {
         if(p.estado===0){
@@ -43,17 +66,31 @@ export const TablaKardex = ({ data, setAccion, setDataSelect, setOpenRegistro })
         });
     }
 
-    const columns = useMemo(()=>columnasKardex(eliminar), []);
+    const estiloDocumento2 = (doc) => {
+        return verificarDocMovimiento({_id_empresa: dataEmpresa?.id, _documento: doc});
+    }
+
+    const consultaDocs = (value) => {
+        const savedDocs = JSON.parse(localStorage.getItem("getDocumentos")) || [];
+        return savedDocs.includes(value)
+    }
+
+    const columns = useMemo(()=>columnasKardex(eliminar, consultaDocs), []);
 
     const memoizedData = useMemo(() => data, [data]);
 
     const table = useReactTable({
         data: memoizedData,
         columns,
+        state: {
+          pagination,
+        },
+        onPaginationChange: setPagination,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+        autoResetPageIndex: false, 
     });
 
     return (
@@ -102,15 +139,12 @@ export const TablaKardex = ({ data, setAccion, setDataSelect, setOpenRegistro })
                 </tbody>
             </table>
             <Paginacion
-                table={table}
-                irinicio={()=>table.setPageIndex(0)}
-                pagina={table.getState().pagination.pageIndex+1}
-                setPagina={setPagina}
-                maximo={table.getPageCount()}
+              table={table}
+              irinicio={() => table.setPageIndex(0)}
+              pagina={table.getState().pagination.pageIndex + 1}
+              maximo={table.getPageCount()}
             />
         </Container>
-
-
       </>  
     )
 }
