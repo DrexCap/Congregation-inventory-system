@@ -13,8 +13,7 @@ import {useQuery} from "@tanstack/react-query";
 
 export function Productos() {
     // TODO: Revisa los permisos de los usuarios
-    const {dataPermisos} = useUserStore();
-    const statePermiso = dataPermisos.some((objeto)=>objeto.modulos.nombre.includes("Productos"));
+    const { productoPermiso } = useUserStore();
 
     const { mostrarProducto, dataProducto, buscarProducto, buscador} = useProductosStore();
     const { mostrarMarca } = useMarcaStore();
@@ -59,8 +58,8 @@ export function Productos() {
         staleTime: Infinity,        // nunca se considera "viejo" → no vuelve a pedir
     });
 
-    if(statePermiso==false){
-        return <BloqueoPagina />
+    if (!productoPermiso) {
+        return <BloqueoPagina />;
     }
 
     if(isLoading) {

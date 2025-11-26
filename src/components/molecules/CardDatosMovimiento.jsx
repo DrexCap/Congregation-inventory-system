@@ -2,13 +2,30 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { SquarePen } from "lucide-react";
-import { ListaGenerica, useKardexStore, Selector, ContainerSelector, Loader } from "../../index";
+import { DatePicker, Space, ConfigProvider } from 'antd';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { SquareX } from "../../components/animate-ui/icons/square-x";
+import { ListaGenerica, useKardexStore, useEmpresaStore, Selector, 
+  ContainerSelector, Loader, useTipoSalidaStore } from "../../index";
 
-export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDocumento }) => {
+export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, 
+                        setDocumento, setFechaProgram, producto, setCardDatosMovi, setTituloCardMovimientos, resetField,
+                        setRegistroLote }) => {
+
     const [fecha, setFecha] = useState("");
     const [colorDoc, setColorDoc] = useState("#6B7280");
     const [documentoCard, setDocumentoCard] = useState("");
     const [docGenerado, setDocGenerado] = useState("");
+    const [lote, setLote] = useState("");
+
+    dayjs.extend(customParseFormat);
+    const { RangePicker } = DatePicker;
+
+    const disabledDate = current => {
+      // No se pueden seleccionar días anteriores a hoy y hoy
+      return current && current < dayjs().startOf('day');
+    };
 
     // TODO: Abrir y Cerrar Modales
     const [openListaDocumento, setOpenListaDocumento] = useState(true);
@@ -17,7 +34,9 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
     const [ancho, setAncho] = useState(false);
     const [espacioIzquieElem, setEspacioIzquieElem] = useState(0);
 
-    const { generarDocumentoMovimiento } = useKardexStore();
+    const { mostrarTipoSalida } = useTipoSalidaStore();
+    const { generarDocumentoMovimiento, generarCodigoLote } = useKardexStore();
+    const { dataEmpresa } = useEmpresaStore();
 
     const coloresSalida = {
       Merma: "#EF4444",       // rojo
@@ -34,17 +53,22 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
     function generarTitulo(tipo) {
       switch (tipo) {
         case "Merma":
-          return "Registro de pérdida por merma";
+          setTituloCardMovimientos("Registro de Pérdida por Merma");
+          return "Registro de Pérdida por Merma";
         case "Devolución":
-          return "Salida por devolución de productos";
+          setTituloCardMovimientos("Salida por Devolución de Productos");
+          return "Salida por Devolución de Productos";
         case "Producción":
-          return "Salida de insumos para producción";
+          setTituloCardMovimientos("Salida de Insumos para Producción");
+          return "Salida de Insumos para Producción";
         case "Traslado":
-          return "Movimiento de traslado entre almacenes";
+          setTituloCardMovimientos("Movimiento de Traslado entre Oficinas");
+          return "Movimiento de Traslado entre Oficinas";
         case "Consumo":
-          return "Consumo interno de materiales";
+          setTituloCardMovimientos("Consumo Interno de Materiales");
+          return "Consumo Interno de Materiales";
         default:
-          return "Movimiento de inventario";
+          return "Movimiento de Inventario";
       }
     }
 
@@ -52,25 +76,21 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
       return Math.floor(Math.random() * (1500 - 900 + 1)) + 900;
     };
 
-    // const fakeRequest2 = (data) => {
-    //   return new Promise((resolve) => {
-    //     setTimeout(() => {
-    //       resolve({data});
-    //     }, getRandomNumber()); // 2 segundos
-    //   });
-    // };
-
     const fakeRequest = (data, getColorSalida) => {
       return new Promise((resolve) => {
         setTimeout(() => {
-          const color = getColorSalida(); 
-          resolve({ data, color });
+          if (["H-", "P-", "C-"].includes(data.substring(0, 2))) {
+            resolve({ data });
+          } else {
+            const color = getColorSalida(); 
+            resolve({ data, color });
+          }
         }, getRandomNumber()); // 
       });
     };
 
     const generarDocumento = async() => {
-      const doc = await generarDocumentoMovimiento({tipo_movimiento: value});
+      const doc = await generarDocumentoMovimiento({tipo_movimiento: value, _id_empresa: dataEmpresa?.id});
       setDocGenerado(doc);
       const { data, color } = await fakeRequest(doc, () => getColorSalida(value));
       setColorDoc(color);
@@ -83,18 +103,44 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
       }
     }
 
+    const generarLote = async() => {
+      const lote = await generarCodigoLote({_nombre_producto: producto, _id_empresa: dataEmpresa?.id});
+      setRegistroLote(lote);
+      const { data } = await fakeRequest(lote, null);
+      setLote(data);
+    }
+
     useEffect(() => {
       console.log("COLOR MOVIMIENTO",getColorSalida());
       
       if(value !== "Producción") {
-        generarDocumento();
-      }
+        generarDocumento();        
+      } 
+      generarLote();
+      
       const ahora = new Date();
       const dia = ahora.getDate().toString().padStart(2, "0");
       const mes = (ahora.getMonth() + 1).toString().padStart(2, "0");
       const anio = ahora.getFullYear();
       setFecha(`${dia}/${mes}/${anio}`);
     }, [value]);
+
+    const onChange = (date, dateString) => {
+      console.log({dateString});
+      setFechaProgram({
+        fecha_inicio: dateString[0],
+        fecha_fin: dateString[1],
+      });
+    };
+
+    const handleCloseModal = async (e) => {
+      e.preventDefault();
+      setCardDatosMovi(false);
+      await mostrarTipoSalida();
+      resetField('tipoSalida');
+      resetField('cantidad'); 
+      resetField('detalle'); 
+    }
 
     return (
         <CardDatosMovimientoOverlay>
@@ -103,6 +149,9 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
                 <div>
                   <Title>{generarTitulo(value)}</Title>
                 </div>
+                <CloseButton type="button" onClick={handleCloseModal}>
+                  <SquareX size={30} animateOnHover />
+                </CloseButton>
               </Header>
 
               {/* Detalle del Movimiento */}
@@ -112,7 +161,40 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
                   <Label>Fecha de apartado: </Label>
                   <Value>{fecha}</Value>
                 </Row>
-
+                {
+                  ["hoja", "hojas", "papel", "papeles", "caratulas"].includes(producto?.toLowerCase()) && (
+                    <Row>
+                      <Label>Lote de {producto}: </Label>
+                      { lote=="" ? (
+                          <LoaderWrapper size="100px">
+                            <Loader size="20px" />
+                          </LoaderWrapper>
+                        ) : (
+                          <Value >
+                            {lote}
+                          </Value>
+                        )}
+                    </Row>
+                  )
+                }
+                <Row2>
+                  <Label style={{ marginRight: 16 }}>Programación: </Label>
+                  <Value>
+                    <ConfigProvider
+                      theme={{
+                        components: {
+                          DatePicker: {
+                            activeBorderColor: "#FC6027",
+                            lineWidthBold: 3,
+                            lineWidth: 2,
+                          },
+                        },
+                      }}
+                    >
+                      <RangePicker status="warning" disabledDate={disabledDate} onChange={onChange} />
+                    </ConfigProvider>
+                  </Value>
+                </Row2>
                 { value !== "Producción" ? (
                     <Row>
                       <Label>Documento de movimiento: </Label>
@@ -136,12 +218,14 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
                                 // ancho={true}
                                 setAncho={setAncho}
                                 color="#fc6027"
+                                fuente={14}
                                 texto1="✅ "
                                 texto2={itemSelect?.documento || "Generar Doc."}
                                 setEspacioIzquieElem={setEspacioIzquieElem}
                             />
                             {
                                 stateDocumento && (<ListaGenerica
+                                    fuente={14}
                                     bottom="-165px"
                                     anchoSelector={ancho}
                                     scroll="scroll"
@@ -170,7 +254,7 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
                           </Value>
                         )}
                         <motion.div
-                          whileHover={{ scale: 1.2, y: -2 }}
+                          whileHover={{ scale: 1.2, y: -1 }}
                           whileTap={{ scale: 0.9, y: 1 }}
                           transition={{ type: "spring", stiffness: 400, damping: 30 }}
                           style={{ display: "flex", alignItems: "center" }}
@@ -190,6 +274,12 @@ export const CardDatosMovimiento = ({ value, data, itemSelect, selectItem, setDo
         </CardDatosMovimientoOverlay>
     )
 }
+
+const CloseButton = styled.button`
+  background: transparent;
+  border: none;
+  cursor: pointer;
+`;
 
 const CardDatosMovimientoOverlay = styled.div`
     /* width: 100%;
@@ -237,7 +327,7 @@ const CardDatosMovimientoContainer = styled.div`
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: center;
   margin-bottom: 12px;
 `;
 
@@ -264,13 +354,20 @@ const Card = styled.div`
 const SectionTitle = styled.h3`
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 12px;
+  margin-bottom: 15px;
 `;
 
 const Row = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 4px 0;
+  align-items: center;
+`;
+
+const Row2 = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0 13px 0;
   align-items: center;
 `;
 

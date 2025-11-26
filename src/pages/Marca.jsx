@@ -4,9 +4,7 @@ import {useQuery} from "@tanstack/react-query";
 
 export function Marca() {
     // TODO: Revisa los permisos de los usuarios
-    const { dataPermisos} = useUserStore();
-    const statePermiso = dataPermisos.some((objeto)=>
-        objeto.modulos.nombre.includes("Marca de productos"));
+    const { marcaPermiso } = useUserStore();
 
     const {mostrarMarca, dataMarca, buscarMarca, buscador} = useMarcaStore();
     const { dataEmpresa } = useEmpresaStore();
@@ -28,8 +26,8 @@ export function Marca() {
         }),
         enabled: dataEmpresa?.id!=null
     });
-
-    if(statePermiso==false){
+    
+    if(!marcaPermiso) {
         return <BloqueoPagina />
     }
 

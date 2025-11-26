@@ -1,7 +1,7 @@
 
 import styled from "styled-components";
-import { Trazabilidad, useKardexStore, useEmpresaStore } from "../../../index";
-import { TrendingDown, TrendingUp, Eye } from "lucide-react";
+import { Trazabilidad, useKardexStore, useEmpresaStore, BtnPopover } from "../../../index";
+import { TrendingDown, TrendingUp, ClipboardMinus } from "lucide-react";
 import {ContentAccionesTabla} from "../ContentAccionesTabla.jsx";
 import { Device } from "../../../styles/breackpoints";
 
@@ -116,7 +116,9 @@ export const columnasKardex = (eliminar, consultaDocs) => {
             enableSorting: false,
             cell: (info) => (
                 <div data-title="Cantidad" className="ContentCell">
-                    { info.row.original.tipo==='salida'?
+                    { (info.row.original.tipo==='salida' && info.row.original.documento!=='Anulado') || 
+                        ((info.row.original.tipo==='entrada' || info.row.original.tipo==='entradas' ) 
+                            && info.row.original.documento==='Anulado') ?
                         <span style={{color: "#ed4d4d", fontWeight: 700}}>
                             - {info.getValue()}
                         </span> :
@@ -134,7 +136,11 @@ export const columnasKardex = (eliminar, consultaDocs) => {
             enableSorting: false,
             cell: (info) => (
                 <div data-title="Stock_Resultante" className="ContentCell">
-                    <span>{info.getValue()}</span>
+                    {
+                        info.row.original.documento==="Anulado" ? 
+                        <ClipboardMinus /> :
+                        <span>{info.getValue()}</span>                        
+                    }
                 </div>
             ),
             enableColumnFilter: true
@@ -152,25 +158,36 @@ export const columnasKardex = (eliminar, consultaDocs) => {
         // },
         {
             accessorKey: "detalle",
-            header: "Detalle",
+            header: "Seguimiento",
             enableSorting: false,
             cell: (info) => (
                 <div data-title="Detalle" className="ContentCell">
                     { 
-                        info.row.original.tipo === "entrada" || info.row.original.tipo === "entradas" ?
-                        <span >Insumo</span> : 
+                        info.row.original.tipo === "entrada" || info.row.original.tipo === "entradas" ||
+                        info.row.original.documento === "Anulado" ?
+                        <BtnPopover 
+                            tipo={info.row.original.tipo} 
+                            detalle={info.getValue()}
+                            fechaInicio={info.row.original.fecha_inicio} 
+                            fechaFin={info.row.original.fecha_fin} 
+                        /> : 
                         <Trazabilidad
+                            lote={info.row.original.codigo_lote}
+                            fechaInicio={info.row.original.fecha_inicio} 
+                            fechaFin={info.row.original.fecha_fin}
                             verificarDoc={consultaDocs}
+                            fecha={info.row.original.fecha}
+                            cantidad={info.row.original.cantidad}
+                            producto={info.row.original.descripcion}
                             documento={info.row.original.documento}
+                            detalle={info.row.original.detalle}
                             id={info.row.original.id}
                             tipo={info.row.original.tipo}
+                            color={getColorDocumento}
+                            responsable={info.row.original.nombres}
+                            tipoUser={info.row.original.tipo_user}
                         />
                     }
-                    {/* <span >{info.getValue()}</span> */}
-                    {/* <Button onClick={() => setOpen(true)}>
-                        <Eye size={16} />
-                        Trazabilidad
-                    </Button> */}
                 </div>
             ),
             enableColumnFilter: true

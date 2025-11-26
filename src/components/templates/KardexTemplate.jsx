@@ -1,21 +1,23 @@
-import {useState} from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styled from "styled-components";
 import { PackagePlus, PackageMinus } from "lucide-react"
-import {Header} from "../organisms/Header.jsx";
+import { Header } from "../organisms/Header.jsx";
 import {
-    Buscador, ContentFiltro, Btnsave, RegistrarSalidaEntrada,
-    useKardexStore, Title, v, Tabs, useProductosStore, useTipoSalidaStore } from "../../index";
+    Buscador, ContentFiltro, Btnsave, RegistrarSalidaEntrada, 
+    useKardexStore, Title, v, Tabs, useProductosStore, 
+    useTipoSalidaStore, CardStock, useLocalStorage  } from "../../index";
 
 export function KardexTemplate({data}) {
     
-    const {setBuscador} = useKardexStore();
+    const [tab, setTab] = useState("");
     const [state, setState] = useState(false);
     const [openRegistro, SetopenRegistro] = useState(false);
     const [accion, setAccion] = useState("");
     const [dataSelect, setdataSelect] = useState([]);
     const [tipo, setTipo] = useState("");
-
+    
+    const {setBuscador} = useKardexStore();
     const { selectProducto } = useProductosStore();
 
     const { mostrarTipoSalida } = useTipoSalidaStore();
@@ -24,6 +26,8 @@ export function KardexTemplate({data}) {
         SetopenRegistro(!openRegistro);
         selectProducto("");
         mostrarTipoSalida();
+        
+        setRefreshFlag(true);
     }
 
     function nuevaEntrada() {
@@ -36,8 +40,10 @@ export function KardexTemplate({data}) {
         setTipo("salida");
     }
 
+    const [refreshFlag, setRefreshFlag] = useLocalStorage("carStock", false);
+
     return (
-        <Container>
+        <Container >
 
             <AnimatePresence>
                 { openRegistro && (
@@ -53,11 +59,11 @@ export function KardexTemplate({data}) {
                             dataSelect={dataSelect}
                             onClose={cerrarRegistro}
                             accion={accion}
+                            setRefreshFlag={setRefreshFlag}
                         />
                     </ModalWrapper>
                 )}
             </AnimatePresence>
-
 
             <header className="header">
                 <Header
@@ -76,7 +82,6 @@ export function KardexTemplate({data}) {
                         bgcolor="#52de65"
                         funcion={nuevaEntrada}
                     />
-
                     <Btnsave
                         icono={<PackageMinus />}
                         titulo="Salida"
@@ -87,11 +92,37 @@ export function KardexTemplate({data}) {
             </section>
 
             <section className="area2">
-                <Buscador buscarProducto={true} setBuscador={setBuscador}/>
+                <div style={{width: "310px"}}></ div>
+
+                <Buscador buscarProducto={true} setBuscador={setBuscador} />
+
+                <AnimatePresence mode="wait">
+                    {refreshFlag ? (
+                        <motion.div
+                            key="card-stock"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ duration: 0.4 }}
+                            className="rounded-xl shadow-md p-4 bg-white"
+                        >
+                            <CardStock tab={tab} />
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="placeholder"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            style={{ width: "310px", height: "100px" }}
+                        />
+                    )}
+                </AnimatePresence>     
             </section>
 
             <section className="main">
-                <Tabs data={data}/>
+                <Tabs data={data} setTab={setTab} setRefreshFlag={setRefreshFlag} />
             </section>
         </Container>
     )
@@ -105,9 +136,9 @@ const Container = styled.div`
     color: ${({ theme }) => theme.text};
     display: grid;
     grid-template:
-    "header" 100px
-    "area1" 100px
-    "area2" 60px
+    "header" 50px
+    "area1" 80px
+    "area2" 85px
     "main" auto;
 
     .header {
@@ -129,7 +160,7 @@ const Container = styled.div`
         /* background-color: rgba(77, 237, 106, 0.14); */
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
     }
 
     .main {

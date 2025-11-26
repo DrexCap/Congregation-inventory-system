@@ -1,7 +1,7 @@
 
 import styled from "styled-components";
 
-export function BloqueoPagina({state}) {
+export function BloqueoPagina() {
 
     return (
         <Container>

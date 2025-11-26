@@ -39,8 +39,11 @@ import {MdOutlineCategory} from "react-icons/md";
 import {FaBuilding} from "react-icons/fa";
 import {TbReportAnalytics} from "react-icons/tb";
 import { GoNumber } from "react-icons/go";
+import { UserCheck, Calendar1 } from "lucide-react"
 
 export const v = {
+    iconoCalendar1: Calendar1,
+    iconoUserCheck: UserCheck,
     iconoNumero: GoNumber,
     iconoTextArea:BsTextareaT,
     iconoreportes : TbReportAnalytics,

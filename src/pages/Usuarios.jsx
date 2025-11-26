@@ -13,12 +13,8 @@ export function Usuarios() {
         mostrarUsuariosTodos,
         dataUsuario,
         buscarUsuario,
-        buscador, dataPermisos } = useUserStore();
+        buscador, usuarioPermiso } = useUserStore();
     const { dataEmpresa } = useEmpresaStore();
-
-    // TODO: Revisa los permisos de los usuarios
-    const statePermiso = dataPermisos.some((objeto)=>
-        objeto.modulos.nombre.includes("Personal"));
 
     const { data: datamodulos } = useQuery({
         queryKey: ["Mostrar modulos"],
@@ -40,7 +36,7 @@ export function Usuarios() {
         enabled: dataEmpresa.id != null,
     });
 
-    if(statePermiso==false){
+    if(!usuarioPermiso){
         return <BloqueoPagina />
     }
 

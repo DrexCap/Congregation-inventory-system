@@ -1,7 +1,7 @@
 
 import styled from "styled-components";
 
-import {useState, useMemo, useEffect, useRef} from "react";
+import {useState, useMemo, useEffect} from "react";
 import {
     useReactTable,
     getCoreRowModel,
@@ -14,28 +14,21 @@ import {FaArrowsAltV} from "react-icons/fa";
 import Swal from "sweetalert2";
 import { Paginacion, useKardexStore, useEmpresaStore, v, columnasKardex} from "../../../index";
 
-export const TablaKardex = ({ data, setAccion, setDataSelect, setOpenRegistro }) => {
+export const TablaKardex = ({ data, setRefreshFlag }) => {
 
-    const { eliminarKardex, verificarDocMovimiento, getdocKardex } = useKardexStore();
+    const { eliminarKardex, getdocKardex } = useKardexStore();
     const { dataEmpresa } = useEmpresaStore();
 
     const [pagination, setPagination] = useState(() => {
       const saved = localStorage.getItem("kardexPagination");
-      return saved ? JSON.parse(saved) : { pageIndex: 0, pageSize: 10 };
+      return saved ? JSON.parse(saved) : { pageIndex: 0, pageSize: 5 };
     });
 
-    const renderCount = useRef(0);
-
-    renderCount.current += 1;
-
     useEffect(() => {
-      console.log(`🔄 El componente se renderizó ${renderCount.current} veces`);
-      
       localStorage.setItem("kardexPagination", JSON.stringify(pagination));
 
       const fetchDocs = async () => {
         const documentos = await getdocKardex({ _id_empresa: dataEmpresa?.id });
-        console.log("Docs consultados:", documentos);
         localStorage.setItem("getDocumentos", JSON.stringify(documentos));
       };
 
@@ -60,14 +53,12 @@ export const TablaKardex = ({ data, setAccion, setDataSelect, setOpenRegistro })
             cancelButtonColor: "#d33",
             confirmButtonText: "Si, eliminar"
         }).then(async (result) => {
+            setRefreshFlag(false);
             if (result.isConfirmed) {
                 await eliminarKardex({id: p.id})
             }
+            setRefreshFlag(true);
         });
-    }
-
-    const estiloDocumento2 = (doc) => {
-        return verificarDocMovimiento({_id_empresa: dataEmpresa?.id, _documento: doc});
     }
 
     const consultaDocs = (value) => {
@@ -151,25 +142,28 @@ export const TablaKardex = ({ data, setAccion, setDataSelect, setOpenRegistro })
 
 const Container = styled.div`
   position: relative;
-
   margin: 5% 3%;
+  
   @media (min-width: ${v.bpbart}) {
     margin: 2%;
   }
   @media (min-width: ${v.bphomer}) {
-    margin: 2em auto;
+    margin: 1.5em auto;
+    margin-bottom: 20px;
     /* max-width: ${v.bphomer}; */
   }
   .responsive-table {
     width: 100%;
     margin-bottom: 1.5em;
     border-spacing: 0;
+    
     @media (min-width: ${v.bpbart}) {
       font-size: 0.9em;
     }
     @media (min-width: ${v.bpmarge}) {
       font-size: 1em;
     }
+
     thead {
       position: absolute;
 
@@ -224,7 +218,7 @@ const Container = styled.div`
         padding: 0.75em 0.5em;
       }
       @media (min-width: ${v.bphomer}) {
-        padding: 0.75em;
+        padding: 0.4em;
       }
     }
     tbody {

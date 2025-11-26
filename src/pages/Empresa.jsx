@@ -5,10 +5,7 @@ import { BloqueoPagina } from "../components/molecules/BloqueoPagina";
 import { useUserStore } from "../store/UserStore.jsx";
 
 export function Empresa() {
-    const { dataPermisos } = useUserStore();
-    const statePermiso = dataPermisos.some((objeto) =>
-        objeto.modulos.nombre.includes("Tu empresa")
-    );
+    const { empresaPermiso } = useUserStore();
 
     const { nroUsuariosXEmpresa, dataEmpresa } = useEmpresaStore();
     //llamar a consultar usuarios por empresa
@@ -19,8 +16,8 @@ export function Empresa() {
         enabled: dataEmpresa?.id != null,
     });
 
-    if (statePermiso == false) {
-        return <BloqueoPagina state={statePermiso}/>;
+    if (!empresaPermiso) {
+        return <BloqueoPagina />;
     }
 
     return (

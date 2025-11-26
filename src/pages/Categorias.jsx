@@ -11,9 +11,7 @@ import {useQuery} from "@tanstack/react-query";
 
 export function Categorias() {
     // TODO: Revisa los permisos de los usuarios
-    const {dataPermisos} = useUserStore();
-    const statePermiso = dataPermisos.some((objeto)=>
-        objeto.modulos.nombre.includes("Categoria de productos"));
+    const {categoriaPermiso} = useUserStore();
 
     const {mostrarCategorias, dataCategorias, buscarCategorias, buscador} = useCategoriasStore();
     const { dataEmpresa } = useEmpresaStore();
@@ -36,7 +34,7 @@ export function Categorias() {
         enabled: dataEmpresa?.id!=null
     });
 
-    if(statePermiso==false){
+    if(!categoriaPermiso) {
         return <BloqueoPagina />
     }
 

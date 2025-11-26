@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
-export function InputText({ children, icono, stilos=false }) {
+export function InputText({ children, icono, stilos=false, regis=false }) {
     return (
         <Container
           $stilos={stilos}
+          $regis={regis}
         >
             <span className="icono">
               {icono}
@@ -26,7 +27,8 @@ const Container = styled.div`
   }
   
   .icono {
-    font-size: 21px;
+    padding-top: 10px;
+    font-size: ${(props)=>props.$regis?"22px":"24px"};
     color: ${(props) => props.theme.text};
   }
   
@@ -50,9 +52,9 @@ const Container = styled.div`
     border: none;
     border-bottom: 2px solid #9b9b9b;
     outline: 0;
-    font-size: 16px;
+    font-size: ${(props)=>props.$regis?"14px":"18px"};
     color: ${(props)=>props.theme.text};
-    padding: 6px 0;
+    padding: ${(props)=>props.$regis?"2px 0":"6px 0"};
     background: transparent;
     transition: border-color 0.2s;
     &.disabled{
@@ -65,14 +67,15 @@ const Container = styled.div`
   }
 
   .form__fielda {
+    margin: -10px 0 -5px 0;
     font-family: inherit;
     width: 100%;
-    min-height: 80px;
+    min-height: 90px;
     resize: vertical; /* permite agrandar manualmente */
     border: 2px solid #9b9b9b;
     border-radius: 6px;
     outline: 0;
-    font-size: 16px;
+    font-size: 14px;
     color: ${(props) => props.theme.text};
     padding: 10px;
     background: transparent;
@@ -104,7 +107,7 @@ const Container = styled.div`
     top: 0;
     display: block;
     transition: 0.2s;
-    font-size: 17px;
+    font-size: ${(props)=>props.$regis?"14px":"17px"};
     color: #9b9b9b;
     pointer-events: none;
   }

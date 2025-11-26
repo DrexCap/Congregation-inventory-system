@@ -13,16 +13,18 @@ import {
     Selector,
     TipoDocData,
     TipouserData,
-    ListaModulos, BtnFiltro, ListaGenerica
+    ListaModulos, BtnFiltro, ListaGenerica,
+    useKardexStore
 } from "../../../index";
 
 import { useForm } from "react-hook-form";
 import { useEmpresaStore } from "../../../store/EmpresaStore";
 
-export function RegistrarUsuarios({ onClose, dataSelect, accion }) {
+export function RegistrarUsuarios({ onClose, dataSelect, accion,setNombreRegistro }) {
 
     const { dataEmpresa } = useEmpresaStore();
     const { insertarUsuarios, editarUsuario, mostrarPermisosEdit } = useUserStore();
+    const { mostrarKardex } = useKardexStore();
 
     const { isLoading } = useQuery({
         queryKey: ["Mostrar permisos Edit", { id_usuario: dataSelect?.id }],
@@ -70,8 +72,9 @@ export function RegistrarUsuarios({ onClose, dataSelect, accion }) {
                 tipo_user: tipouser.descripcion,
                 tipo_doc: tipodoc.descripcion
             };
-            console.log({p});
-            await editarUsuario(p, checkBox, dataEmpresa.id);
+            setNombreRegistro(data.nombres);
+            await editarUsuario(p, checkBox, dataEmpresa?.id);
+            await mostrarKardex({ _id_empresa: dataEmpresa?.id });
             onClose();
         } else {
             const p = {

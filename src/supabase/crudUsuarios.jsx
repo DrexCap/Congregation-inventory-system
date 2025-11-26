@@ -5,6 +5,9 @@ export const InsertarUsuarios = async(p) => {
     // TODO: El "maybeSingle()" retorna un simple objeto en lugar de un array
     const { data, error } =
         await supabase.from("usuario").insert(p).select().maybeSingle();
+
+    console.log("InsertarUsuarios", data, error);
+        
     if(error) {
         Swal.fire({
             icon: "error",
@@ -64,6 +67,13 @@ export const BuscarUsuario = async(p) => {
     return data;
 }
 
+export const BuscarNombreUsuario = async(p) => {
+    const {data} = await supabase.from("usuario")
+        .select("nombres").eq("id_auth", p._id_auth);
+    console.log("BuscarNombreUsuario", data);
+    return data;
+}
+
 export const InsertarAsignaciones = async(p) => {
     const { data, error } =
         await supabase.from("asignar_empresa").insert(p);
@@ -95,14 +105,6 @@ export const MostrarPermisos = async(p) => {
         await supabase.from("permisos").select(
             `id, id_usuario, id_modulo, modulos(nombre)`
         ).eq("id_usuario", p.id_usuario);
-    if(error) {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Error al insertar permisos "+error.message,
-            // footer: '<a href="#">Why do I have this issue?</a>'
-        });
-    }
     if ( data ) return data;
 }
 

@@ -39,19 +39,19 @@ export const useProductosStore = create((set, get)=>({
         await InsertarProducto(p);
         const {mostrarProducto, parametros} = get();
         // const {parametros} = get();
-        set(mostrarProducto(parametros));
+        await mostrarProducto(parametros);
     },
     eliminarProducto: async(p) => {
         await EliminarProducto(p);
         const {mostrarProducto, parametros} = get();
         // const {parametros} = get();
-        set(mostrarProducto(parametros));
+        await mostrarProducto(parametros);
     },
     editarProducto: async (p) => {
         await EditarProducto(p);
         const {mostrarProducto, parametros} = get();
         // const { parametros } = get();
-        set(mostrarProducto(parametros));
+        await mostrarProducto(parametros);
     },
     buscarProducto: async(p) => {
         const response = await BuscarProducto(p);

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import {useQuery} from "@tanstack/react-query";
+import Swal from "sweetalert2";
 import { v } from "../../../styles/variables";
 import {
   InputText,
@@ -20,19 +21,30 @@ import { Controller, useForm } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
 import { SquareX } from "../../../components/animate-ui/icons/square-x";
 
-export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
+export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo, setRefreshFlag }) {
     const [focused, setFocused] = useState(false);
     const [anchoSelectorBus, setAnchoSelectorBus] = useState(0);
     const [stateListaProd, SetstateListaProd] = useState(false);
     const [stateTipoSalida, setStateTipoSalida] = useState(false);
     const [documento, setDocumento] = useState("");
+    const [registroLote, setRegistroLote] = useState("");
+    const [fecha, setFechaProgram] = useState({
+        fecha_inicio: "",
+        fecha_fin: "",
+    });
 
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
 
+    //TODO: Para cerra y abrir la CardDatosMovimientos
+    const [cardDatosMovi, setCardDatosMovi] = useState(false);
+
     // TODO: Para ver si se activo el scroll
     const contenedorRef = useRef(null);
     const [tieneScroll, setTieneScroll] = useState(false);
+
+    // TODO: Para guardar el titulo de la Card de Movimientos
+    const [tituloCardMovimientos, setTituloCardMovimientos] = useState("");
 
     const { idusuario } = useUserStore();
     const { dataTipoSalida, selectTipoSalida, tipoSalidaItemSelect } = useTipoSalidaStore();
@@ -49,6 +61,7 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
     } = useKardexStore();
 
     useEffect(() => {
+        setRefreshFlag(false);
         // Esto es para desactivar el scroll de la home cuando se habre la ventala de registro
         document.body.style.overflow = "hidden";
         return () => {
@@ -57,7 +70,16 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
     }, []);
 
     function toggleTipoSalida() {
-        setStateTipoSalida(!stateTipoSalida);
+        if (productoItemSelect?.descripcion) {
+            setStateTipoSalida(!stateTipoSalida);
+        } else {
+            Swal.fire({
+                icon: "warning",
+                title: "Advertencia",
+                text: "Debes primero buscar y seleccionar un producto.",
+            });
+        }
+
         setTimeout(() => {
             if (contenedorRef.current) {
                 const { scrollHeight, clientHeight } = contenedorRef.current;
@@ -72,7 +94,12 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
         formState: { errors },
         handleSubmit,
         watch,
-    } = useForm();
+        resetField 
+    } = useForm({
+        defaultValues: { tipoSalida: null },
+        mode: "onSubmit",
+        // reValidateMode: "onSubmit",
+    });
 
     //TODO: Para sacar el espacio entre buscador y el elemento padre
     const [espacioIzquieElem, setEspacioIzquieElem] = useState(0);
@@ -90,7 +117,7 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                 stockResultante = productoItemSelect.stock + parseFloat(data.cantidad);
             }
             if (tipo === "entrada") {
-                doc = await generarDocumentoMovimiento({ tipo_movimiento: "Insumo" });
+                doc = await generarDocumentoMovimiento({ tipo_movimiento: "Insumo", _id_empresa: dataEmpresa.id });
             }
             const p = {
                 fecha: new Date(),
@@ -103,17 +130,21 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                 stock_resultante: stockResultante,
                 documento: tipo === "entrada" ? doc : documento,
                 id_tipo_salida: tipo === "entrada" ? 8 : tipoSalidaItemSelect?.id,
+                fecha_inicio: fecha?.fecha_inicio ? fecha.fecha_inicio : null,
+                fecha_fin: fecha?.fecha_fin ? fecha.fecha_fin : null,
+                codigo_lote: registroLote ? registroLote : null,
             };
             console.log("parametros Kardex", { p });
 
             await insertarKardex(p);
 
             setSuccess(true);
-            
+
             setTimeout(() => {
                 setSuccess(false);
                 selectProducto("");
                 onClose();  // 🔥 cierra después de mostrar "Guardado!"
+                setRefreshFlag(true);
             }, 1600);
             
         } catch (error) {
@@ -135,6 +166,24 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
         enabled: dataEmpresa?.id!=null,
     });
 
+
+    function filtrarTipoSalida(dataTipoSalida, productoItemSelect) {
+        // Palabras que permiten mantener "Producción"
+        const permitidos = ["hoja", "hojas", "papel", "papeles"];
+
+        // Normaliza la descripción a minúsculas para comparar sin errores
+        const descripcion = productoItemSelect.descripcion?.toLowerCase() || "";
+
+        // Si la descripción NO está en los permitidos, filtramos "Producción"
+        if (!permitidos.includes(descripcion)) {
+            return dataTipoSalida.filter(item => item.movimiento !== "Producción");
+        }
+
+        // Si sí está en los permitidos, devolvemos todo el array
+        return dataTipoSalida;
+    }
+
+
     return (
         <Container>
             <div className="sub-contenedor">
@@ -145,8 +194,11 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                     </section>
 
                     <section>
-                        <span onClick={onClose}>
-                            <SquareX size={28} animateOnHover />
+                        <span 
+                            onClick={onClose} 
+                            style={{cursor: "pointer", alignItems: "center", display: "flex"}}
+                        >
+                            <SquareX size={30} animateOnHover />
                         </span>
                     </section>
                 </div>            
@@ -161,7 +213,17 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                                 rules={{ required: "Debes seleccionar un producto" }}
                                 render={({ field }) => (
                                     <>
-                                        <div onClick={() => SetstateListaProd(!stateListaProd)}>
+                                        <div onClick={() => {
+                                            if (cardDatosMovi) {
+                                                Swal.fire({
+                                                    icon: "warning",
+                                                    title: "Advertencia",
+                                                    text: `Debes cerrar primero la Card de ${tituloCardMovimientos}`,
+                                                })
+                                            } else {
+                                                SetstateListaProd(!stateListaProd)
+                                            }
+                                        }}>
                                             <Buscador
                                                 setAnchoSelector={setAnchoSelectorBus}
                                                 buscarProducto={true}
@@ -234,7 +296,6 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                                                 texto2={tipoSalidaItemSelect?.movimiento}
                                                 setEspacioIzquieElem={setEspacioIzquieElem1}
                                             />
-
                                             {stateTipoSalida && (
                                                 <ListaGenerica
                                                     bottom="-220px"
@@ -242,12 +303,14 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                                                         tieneScroll?ancho-6:ancho
                                                     }
                                                     scroll="scroll"
-                                                    data={dataTipoSalida}
+                                                    data={filtrarTipoSalida(dataTipoSalida, productoItemSelect)}
                                                     setState={() => setStateTipoSalida(!stateTipoSalida)}
                                                     funcion={(item) => {
                                                         selectTipoSalida(item);
                                                         // sincronizar con RHF
                                                         field.onChange(item.id);
+                                                        // field.onChange(cardDatosMovi?item.id:tipoSalidaItemSelect?.id);
+                                                        setCardDatosMovi(true);
                                                     }}
                                                     espacioIzquieElem={espacioIzquieElem1}
                                                 />
@@ -258,14 +321,13 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                             </ContainerSelector2>
                         )}
                         {(errors.tipoSalida) && (
-                            <p style={{ color: "#f46943", fontSize: "14px", 
-                                marginTop: "3px", marginBottom: "5px" }}>
+                            <p style={{ color: "#f46943", fontSize: "14px", marginTop: "3px", marginBottom: "5px" }}>
                                 ⚠️ {errors.tipoSalida.message}
                             </p>
                         )}
 
                         <AnimatePresence>
-                            {tipoSalidaItemSelect?.movimiento !== "Elegir" && (
+                            {(tipoSalidaItemSelect?.movimiento !== "Elegir" && cardDatosMovi) && (
                                 <motion.div
                                     key="card-datos-mov"
                                     initial={{ opacity: 0, y: 15, scale: 0.97 }}
@@ -274,11 +336,17 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                                     transition={{ duration: 0.5, ease: "easeOut" }}
                                 >
                                     <CardDatosMovimiento
+                                        setRegistroLote={setRegistroLote}
+                                        resetField={resetField}
+                                        setTituloCardMovimientos={setTituloCardMovimientos}
+                                        setCardDatosMovi={setCardDatosMovi}
                                         data={dataDocumentosCaratula}
+                                        producto={productoItemSelect?.descripcion}
                                         itemSelect={documentosCaratulaItemSelect}
                                         selectItem={selectDocumentoCaratula}
                                         value={tipoSalidaItemSelect?.movimiento}
                                         setDocumento={setDocumento}
+                                        setFechaProgram={setFechaProgram}
                                     />
                                 </motion.div>
                             )}
@@ -329,8 +397,8 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
                             titulo="Enviar"
                             bgcolor="#ef552b"
                             loading={loading}
-                            errors={errors}
                             success={success}
+                            errors={errors}
                         />
                     </div>
                 </form>
@@ -340,13 +408,13 @@ export function RegistrarSalidaEntrada({ onClose, dataSelect, accion, tipo }) {
 }
 
 const Container = styled.div`
-  /* transition: 0.5s; */
+  transition: 0.5s;
   /* padding-right: 6px; */
   top: 0;
   left: 0;
   /* position: sticky; */
   position: fixed;
-  /* background-color: rgba(10, 9, 9, 0.5); */
+  /* background-color: rgba(10, 9, 9, 0.5);  */
   display: flex;
   width: 100%;
   min-height: 100vh;

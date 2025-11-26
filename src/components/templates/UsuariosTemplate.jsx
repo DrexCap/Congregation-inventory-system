@@ -1,6 +1,8 @@
 import {useState} from "react";
 import styled from "styled-components";
+import { motion, AnimatePresence } from "framer-motion";
 import {Header} from "../organisms/Header.jsx";
+import vacio from "../../assets/vacio.json";
 import {
     BtnFiltro,
     Buscador,
@@ -16,13 +18,19 @@ export function UsuariosTemplate({data}) {
     const [accion, setAccion] = useState("");
     const [openRegistro, setOpenRegistro] = useState(false);
 
+    // Controlar la animacion del Header
+    const [headerAct, setHeader] = useState(true);
+
     const nuevoRegistro = () => {
         setOpenRegistro(!openRegistro);
         setAccion("Nuevo");
         setDataSelect([]);
+        setHeader(false);
     }
 
     const { setBuscador } = useUserStore();
+
+    const[nombreRegistro,setNombreRegistro] = useState("");
 
     return (
         <Container>
@@ -30,14 +38,44 @@ export function UsuariosTemplate({data}) {
                 openRegistro && <RegistrarUsuarios
                     dataSelect={dataSelect}
                     accion={accion}
-                    onClose={()=>setOpenRegistro(!openRegistro)}
+                    setNombreRegistro={setNombreRegistro}
+                    onClose={()=>{
+                        setOpenRegistro(!openRegistro)
+                        setHeader(true);
+                    }}
                 />
             }
             <header className="header">
-                <Header
-                    stateConfig={{ state, setState: ()=>setState(!state) }}
-                />
+                <AnimatePresence mode="wait">
+                    {
+                        headerAct ? (
+                            <motion.div
+                                key="card-stock"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.15 }}
+                                className="rounded-xl shadow-md p-4 bg-white"
+                            >
+                                <Header 
+                                    nombreRegistro={nombreRegistro}
+                                    stateConfig={{ state, setState: ()=>setState(!state) }} 
+                                />
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="placeholder"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                style={{ width: "310px", height: "100px" }}
+                            />
+                        )
+                    }
+                </AnimatePresence>
             </header>
+
             <section className="area1">
                 <ContentFiltro >
                     <Title>Personal</Title>
@@ -49,9 +87,11 @@ export function UsuariosTemplate({data}) {
                     />
                 </ContentFiltro>
             </section>
+
             <section className="area2">
                 <Buscador setBuscador={setBuscador}/>
             </section>
+            
             <section className="main">
                 {data.length == 0 && (
                     <Lottieanimacion
@@ -66,6 +106,7 @@ export function UsuariosTemplate({data}) {
                     setOpenRegistro={setOpenRegistro}
                     setDataSelect={setDataSelect}
                     setAccion={setAccion}
+                    setHeader={setHeader}
                 />
             </section>
         </Container>
@@ -87,6 +128,7 @@ const Container = styled.div`
     ;
     .header {
         grid-area: header;
+        justify-content: end;
         //background-color: rgba(103, 93, 241, 0.14);
         display: flex;
         align-items: center;

@@ -63,7 +63,7 @@ export const TemasData = [
     },
 ];
 
-//TODO: Data submodulo configuracion
+//TODO: Data submodulo Producto configuracion
 export const DataSubModuloProductos = [
     {
         title:"Suministros",
@@ -85,8 +85,30 @@ export const DataSubModuloProductos = [
     },
 ]
 
+//TODO: Data submodulo Impresoras configuracion
+export const DataSubModuloImpresoras = [
+    {
+        title:"Impresoras",
+        subtitle:"Registra tus suminitros",
+        icono:"https://i.ibb.co/PGcg03R4/suministros-sin-fondo-2.png",
+        link:"/configurar/productos/suministros",
+    },
+    {
+        title:"Mantenimiento",
+        subtitle:"Registra tus caratulas",
+        icono:"https://i.ibb.co/4Rjxy68b/caratulas-removebg-preview.png",
+        link:"/configurar/productos/caratulas",
+    },
+    {
+        title:"Libros",
+        subtitle:"Registra tus libros",
+        icono:"https://i.ibb.co/pBQ1gSfY/libros-sin-fondo.png",
+        link:"/configurar/productos/libros",
+    },
+]
+
 //data configuracion
-export const DataModulosConfiguracion =[
+export const DataModulosConfiguracion = [
     {
         title:"Productos",
         subtitle:"registra tus productos",

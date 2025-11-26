@@ -61,6 +61,14 @@ export function MyRoutes() {
                 </ProtectedRoute>
             }/>
 
+            {/* <Route path="/configurar/productos/impresoras" element={
+                <ProtectedRoute accessBy="authenticated" >
+                    <Layout>
+                        <Impresoras />
+                    </Layout>
+                </ProtectedRoute>
+            }/> */}
+
             <Route path="/configurar/productos/caratulas" element={
                 <ProtectedRoute accessBy="authenticated" >
                     <Layout>

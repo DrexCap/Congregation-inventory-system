@@ -21,9 +21,11 @@ export function Sidebar({ state, setState }) {
 
     return (
         <Main $isopen={state.toString()}>
+
             <span className="Sidebarbutton" onClick={() => setState(!state)}>
                 {<v.iconoflechaderecha />}
             </span>
+
             <Container $isopen={state.toString()} className={state ? "active" : ""}>
                 <div className="Logocontent">
                     <div className="imgcontent">
@@ -46,11 +48,12 @@ export function Sidebar({ state, setState }) {
                           <div className="Linkicon">
                             <motion.div
                               animate={hoveredIndex === index ? { scale: 1.1, y: -1 } : { scale: 1, y: 0 }}
+                              whileTap={{ scale: 0.9, y: 1 }}
                               transition={{ type: "spring", stiffness: 400, damping: 30 }}
                               style={{ display: "flex", alignItems: "center" }}
                             >
                               { animateOnHover ? (
-                                <Icon animate={hoveredIndex === index} size={21.5} />
+                                <Icon animate={hoveredIndex === index} size={22} />
                               ) : (
                                 <Icon  />
                               )}
@@ -77,6 +80,7 @@ export function Sidebar({ state, setState }) {
                             <div className="Linkicon">
                               <motion.div
                                 animate={ isHovered ? { scale: 1.1, y: -1 } : { scale: 1, y: 0 }}
+                                whileTap={{ scale: 0.9, y: 1 }}
                                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
                                 style={{ display: "flex", alignItems: "center" }}
                               >
@@ -93,6 +97,7 @@ export function Sidebar({ state, setState }) {
                 <Divider />
                 {state && <SidebarCard />}
             </Container>
+
         </Main>
     );
 }

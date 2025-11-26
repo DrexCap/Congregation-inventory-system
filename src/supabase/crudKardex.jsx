@@ -11,7 +11,7 @@ export const InsertarKardex = async(p) => {
         Swal.fire({
             icon: "error",
             title: "Oops "+error.message,
-            text: "Ya existe un registro con "+p._descripcion,
+            text: "Ya existe un registro con "+JSON.stringify(p),
             footer: '<a href="#">Agregue una nueva descripcion</a>'
         });
     }
@@ -86,6 +86,15 @@ export const GenerarDocumentoMovimiento = async(p) => {
     return data;
 }
 
+export const GenerarCodigoLote = async(p) => {
+    const {data, error} = await supabase.rpc("generar_codigo_lote", p);
+    if(error) {
+        return;
+    }
+    console.log("Generar Codigo de Lote de hojas ", {data});
+    return data;
+}
+
 export const VerificarDocMovimiento = async(p) => {
     const { data, error } = await supabase.from("kardex_caratula")
         .select("documento").eq("id_empresa", p._id_empresa)
@@ -106,8 +115,6 @@ export const GetdocKardex = async (p) => {
         .eq("id_empresa", p._id_empresa)
         .like("documento", "PROD-%");
 
-    if (er1) throw new Error(er1.message);
-
     const documentos = docsKardex.map(d => d.documento);
 
     // 2) Consulto solo esos en kardex_caratula
@@ -116,8 +123,6 @@ export const GetdocKardex = async (p) => {
         .select("documento")
         .eq("id_empresa", p._id_empresa)
         .in("documento", documentos);
-
-    if (er2) throw new Error(er2.message);
 
     // 3) Devuelvo como array (únicos)
     return [...new Set(docsCaratula.map(d => d.documento))];

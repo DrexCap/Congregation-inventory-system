@@ -16,23 +16,27 @@ import {
 import Swal from "sweetalert2";
 import { FaArrowsAltV } from "react-icons/fa";
 import { useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
-export function TablaUsuarios({ data, setOpenRegistro, setDataSelect, setAccion, }) {
+export function TablaUsuarios({ data, setOpenRegistro, setDataSelect, setAccion, setHeader }) {
     const [pagina, setPagina] = useState(1);
     const { eliminarUsuario } = useUserStore();
+    const queryClient = useQueryClient();
 
     const editar = (data) => {
-        if (data.tipo_user === "superadmin") {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Esta registro no se permite modificar ya que es valor por defecto.",
-            });
-            return;
-        }
+        // if (data.tipo_user === "superadmin") {
+        //     Swal.fire({
+        //         icon: "error",
+        //         title: "Oops...",
+        //         text: "Esta registro no se permite modificar ya que es valor por defecto.",
+        //     });
+        //     return;
+        // }
+        // queryClient.invalidateQueries(["buscarNombreUsuario"]);
         setOpenRegistro(true);
         setDataSelect(data);
         setAccion("Editar");
+        setHeader(false);
     };
 
     const eliminar = (p) => {

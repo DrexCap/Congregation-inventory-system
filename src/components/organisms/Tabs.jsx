@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { PackageCheck } from "lucide-react"
 import {
@@ -7,12 +7,22 @@ import {
 } from "../../index";
 import { Device } from "../../styles/breackpoints"
 
-export const Tabs = ({data}) => {
+export const Tabs = ({data, setTab, setRefreshFlag}) => {
     const [activeTab, setactiveTab] = useState(0);
     
     const handleClick = (index) => {
-        setactiveTab(index);
+        setactiveTab(index);        
     };
+
+    useEffect(() => {
+        if(activeTab==0){
+            setTab("Suministro");
+        } else if(activeTab==1){
+            setTab("Caratulas");
+        } else {
+            setTab("");
+        }
+    }, [activeTab])
 
     return (
         <Container className="container" $activeTab={`${activeTab}00%`}>
@@ -44,7 +54,7 @@ export const Tabs = ({data}) => {
             </ul>
 
             <div className="tab-content">
-                {activeTab === 0 && <TablaKardex data={data}/>}
+                {activeTab === 0 && <TablaKardex data={data} setRefreshFlag={setRefreshFlag} />}
                 {activeTab === 1 && <>area 2</>}
                 {activeTab === 2 && <>area 3</>}
             </div>
@@ -108,7 +118,6 @@ const Container = styled.div`
     }
 
     .tab-content {
-        margin-top: 20px;
         height: 100%;
         width:100%;
     }

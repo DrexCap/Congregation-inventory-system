@@ -8,6 +8,7 @@ export const ListaGenerica = ({
   data,
   setState,
   funcion,
+  fuente,
   anchoListaGenerica,
   scroll,
   bottom,
@@ -81,6 +82,7 @@ export const ListaGenerica = ({
     //     </section>
     // </Container>
     <Container
+      $fuente={`${fuente}px`}
       $scroll={scroll}
       $bottom={bottom}
       $anchoSelector={`${anchoSelector}px`}
@@ -152,6 +154,7 @@ export const ListaGenerica = ({
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  font-size: ${(props) => props.$fuente ?? "16px"};
   background: ${({ theme }) => theme.body};
   color: ${({ theme }) => theme.text};
   position: absolute;

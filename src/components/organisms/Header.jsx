@@ -1,23 +1,67 @@
-import styled from "styled-components";
+
 import {
     BtnCircular,
     UserAuth,
     v,
     ListaMenuDesplegable,
     DesplegableUser,
-    useAuthStore
+    useAuthStore,
+    useUserStore
 } from "../../index";
+import {useQuery} from "@tanstack/react-query";
+import styled, { keyframes } from "styled-components";
 
-export function Header({ stateConfig }) {
+const shadowPulse = keyframes`
+  0% {
+    background: #F76F3A;
+    box-shadow: -20px 0 #F76F3A, 20px 0 #F76F3A;
+  }
+  33% {
+    background: #ffffff;
+    box-shadow: -20px 0 #F76F3A, 20px 0 #ffffff;
+  }
+  66% {
+    background: #F76F3A;
+    box-shadow: -20px 0 #ffffff, 20px 0 #ffffff;
+  }
+  100% {
+    background: #ffffff;
+    box-shadow: -20px 0 #ffffff, 20px 0 #F76F3A;
+  }
+`;
 
-    const {signOut} = useAuthStore()
+export const LoaderNombre = styled.span`
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  top: 2px; 
+  background: #F76F3A;
+  box-shadow: -20px 0 #F76F3A, 20px 0 #F76F3A;
+  animation: ${shadowPulse} 1.4s ease-in-out infinite;
+`;
+
+export function Header({ stateConfig, nombreRegistro }) {
+
+    const { buscarNombreUsuario } = useUserStore();
+    const { signOut } = useAuthStore();
     const { user } = UserAuth();
+
     const funcionXtipo = async (p) => {
         if (p.tipo === "cerrarsesion") {
             sessionStorage.removeItem("autoReloaded");
             await signOut();
         }
     };
+
+    const { data, isFetching } = useQuery({
+      queryKey: ["buscarNombreUsuario"],
+      queryFn: () => buscarNombreUsuario({_id_auth: user.id}),
+      enabled: user.id !== null,
+      staleTime: 0,
+      refetchOnWindowFocus: false,
+    });
 
     return (
         <Container>
@@ -35,7 +79,9 @@ export function Header({ stateConfig }) {
                     translatex="-50px"
                     translatey="-12px"
                 />
-                <span className="nombre">{user.email}</span>
+                <span className="nombre" style={{ fontSize: "18px" }}>
+                  {nombreRegistro ? nombreRegistro : data?.[0]?.nombres}
+                </span>
                 {stateConfig.state && (
                     <ListaMenuDesplegable
                         data={DesplegableUser}

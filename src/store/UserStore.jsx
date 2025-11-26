@@ -9,7 +9,8 @@ import {
     EliminarUsuario,
     EditarUsuario, BuscarUsuario, InsertarAsignaciones, InsertarPermisos,
     MostrarPermisos,
-    EliminarPermisos
+    EliminarPermisos,
+    BuscarNombreUsuario
 } from "../index";
 import { create } from "zustand";
 
@@ -108,6 +109,13 @@ export const useUserStore = create((set,get)=>({
         set({dataUsuario: response});
         return response;
     },
+    dataUsuarioNombre: JSON.parse(localStorage.getItem("nombreUsuario")) || [],
+    buscarNombreUsuario: async (p) => {
+        const response = await BuscarNombreUsuario(p);
+        set({ dataUsuarioNombre: response });
+        localStorage.setItem("nombreUsuario", JSON.stringify(response));
+        return response;
+    },
     dataModulos: [],
     mostrarModulos: async() => {
         const response = await MostrarModulos();
@@ -115,10 +123,34 @@ export const useUserStore = create((set,get)=>({
         return response;
     },
     dataPermisos: [],
+    kardexPermiso: JSON.parse(localStorage.getItem("kardexPermisoCache")) ?? false,
+    usuarioPermiso: JSON.parse(localStorage.getItem("usuarioPermisoCache")) ?? false,
+    productoPermiso: JSON.parse(localStorage.getItem("productoPermisoCache")) ?? false,
+    empresaPermiso: JSON.parse(localStorage.getItem("empresaPermisoCache")) ?? false,
+    categoriaPermiso: JSON.parse(localStorage.getItem("categoriaPermisoCache")) ?? false,
+    marcaPermiso: JSON.parse(localStorage.getItem("marcaPermisoCache")) ?? false,
     mostrarPermisos: async (p) => {
         const response = await MostrarPermisos(p);
         set({ dataPermisos: response });
-        
+        const statePermisoKardex = response.some((objeto)=> objeto.modulos.nombre.includes("Kardex"));
+        const statePermisoUsuario = response.some((objeto)=> objeto.modulos.nombre.includes("Personal"));
+        const statePermisoProducto = response.some((objeto)=> objeto.modulos.nombre.includes("Productos"));
+        const statePermisoEmpresa = response.some((objeto)=> objeto.modulos.nombre.includes("Tu empresa"));
+        const statePermisoCategoria = response.some((objeto)=> objeto.modulos.nombre.includes("Categoria de productos"));
+        const statePermisoMarca = response.some((objeto)=> objeto.modulos.nombre.includes("Marca de productos"));
+        localStorage.setItem("kardexPermisoCache", JSON.stringify(statePermisoKardex));
+        localStorage.setItem("usuarioPermisoCache", JSON.stringify(statePermisoUsuario));
+        localStorage.setItem("productoPermisoCache", JSON.stringify(statePermisoProducto));
+        localStorage.setItem("empresaPermisoCache", JSON.stringify(statePermisoEmpresa));
+        localStorage.setItem("categoriaPermisoCache", JSON.stringify(statePermisoCategoria));
+        localStorage.setItem("marcaPermisoCache", JSON.stringify(statePermisoMarca));
+        set({ kardexPermiso: statePermisoKardex });
+        set({ usuarioPermiso: statePermisoUsuario });
+        set({ productoPermiso: statePermisoProducto });
+        set({ empresaPermiso: statePermisoEmpresa });
+        set({ categoriaPermiso: statePermisoCategoria });
+        set({ marcaPermiso: statePermisoMarca });
+                
         let allDocs = [];
         DataModulosConfiguracion.map((element) => {
             const statePermiso = response.some((objeto) =>
