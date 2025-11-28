@@ -6,9 +6,9 @@ export function FooterLogin() {
             <section className="lock">
                 <GiPadlock />
                 <span>
-                  Esta es una página segura de codigo369. Si tienes dudas sobre la
+                  Esta es una página segura de Luis Andre. Si tienes dudas sobre la
                   autenticidad de la web, comunícate con
-                  <br /> nosotros al 311-9898 o a través de nuestros medios digitales.
+                  <br /> nosotros al 951321378 o a través de nuestros medios digitales.
                 </span>
             </section>
             <section className="derechos">
@@ -16,7 +16,7 @@ export function FooterLogin() {
                 <div className="separador"></div>
                 <span>Todos los derechos reservados</span>
                 <div className="separador"></div>
-                <span>© 2025 DrexCap.com</span>
+                <span>© 2025 DrexCap</span>
             </section>
         </Container>
     );

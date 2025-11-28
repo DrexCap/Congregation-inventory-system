@@ -14,9 +14,10 @@ import {
   UploadFile, 
   useTrazaProdHojaStore,
   Btnsave,
-  supabase 
+  supabase
 } from "../../../../index";
 import { v } from "../../../../styles/variables";
+import ReactDOMServer from "react-dom/server";
 import { useQuery } from "@tanstack/react-query";
 
 
@@ -194,9 +195,9 @@ export const RegistrarTrazaUno = ({ setEstadoColor, estadoColor, code_lote, reca
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
+  
   const [isSetHovered, setHovered] = useState(null);
-
+  
   const [fecha, setFecha] = useState("");
   
   const [estados, setEstados] = useState(false)
@@ -215,16 +216,6 @@ export const RegistrarTrazaUno = ({ setEstadoColor, estadoColor, code_lote, reca
     evidencia: "",
     evidencia_public_id: ""
   })
-
-  const { data:dataUser, isLoading, error } = useQuery({
-    queryKey: ["Mostrar Usuario Logueado ", dataEmpresa?.id, code_lote],
-    queryFn: () => mostrarUsuarios(),
-    enabled: dataEmpresa?.id != null,
-    refetchOnWindowFocus: false, // evita que se dispare al cambiar de pestaña
-    refetchOnReconnect: false, // evita refetch al reconectar internet
-    refetchOnMount: false, // no vuelve a pedir datos si ya están en cache
-    staleTime: 0,
-  });
 
   const { data: dataTrazaProdHoja } = useQuery({
     queryKey: ["Extraer Procesos Traza Hojas", dataEmpresa?.id, code_lote],
@@ -259,6 +250,7 @@ export const RegistrarTrazaUno = ({ setEstadoColor, estadoColor, code_lote, reca
     return data;
   };
 
+  const dataUser = JSON.parse(localStorage.getItem("nombreUsuario"));
 
   // Para cargar las imagenes
   const [fileLista, setFileLista] = useState([]);
@@ -291,7 +283,7 @@ export const RegistrarTrazaUno = ({ setEstadoColor, estadoColor, code_lote, reca
         id_empresa: dataEmpresa?.id,
         cod_lote: code_lote,
         proceso: 1,
-        responsable: dataUser?.nombres,
+        responsable: dataUser?.[0]?.nombres,
         fecha,
         estado_proceso: estadoColor,
         ...(isObservado
@@ -310,6 +302,7 @@ export const RegistrarTrazaUno = ({ setEstadoColor, estadoColor, code_lote, reca
       if(actualizar) {        
         await actualizarTrazaHojas(p);
         await deleteImage(JSON.parse(localStorage.getItem(`traza_${code_lote}-${p.proceso}`)).evidencia_public_id); 
+        recargar();
       } else {
         await insertarTrazaHojas(p);
         setActualizar(true);
@@ -392,9 +385,12 @@ export const RegistrarTrazaUno = ({ setEstadoColor, estadoColor, code_lote, reca
 
           setValue("evidencia", [file]); // No tengo idea para que es esta linea
         }
-  
+
+        const nombreLogueadoCache = JSON.parse(localStorage.getItem("nombreUsuario"));
+
         reset({
-          responsable: dataLocal.responsable,
+          responsable: dataLocal.responsable !== nombreLogueadoCache[0].nombres ? 
+            `${dataLocal.responsable}   --->   ${nombreLogueadoCache[0].nombres}` : dataLocal.responsable,
           fecha: dataLocal.fecha,
           estadoProceso: dataLocal.estado_proceso,
           detalle: dataLocal.observaciones || "",
@@ -430,6 +426,8 @@ export const RegistrarTrazaUno = ({ setEstadoColor, estadoColor, code_lote, reca
     setFileLista(newList);
     setValue("evidencia", newList);    
   };
+
+
 
   return (
     <div
@@ -484,7 +482,7 @@ export const RegistrarTrazaUno = ({ setEstadoColor, estadoColor, code_lote, reca
                 <input
                   disabled={true}
                   className="form__field"
-                  defaultValue={dataUser?.nombres}
+                  defaultValue={dataUser?.[0]?.nombres}
                   type="text"
                   placeholder=""
                   {...register("responsable", {

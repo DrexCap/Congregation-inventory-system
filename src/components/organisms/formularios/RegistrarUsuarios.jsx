@@ -72,7 +72,10 @@ export function RegistrarUsuarios({ onClose, dataSelect, accion,setNombreRegistr
                 tipo_user: tipouser.descripcion,
                 tipo_doc: tipodoc.descripcion
             };
-            setNombreRegistro(data.nombres);
+            setNombreRegistro({
+                id: dataSelect.id,
+                nombres: data.nombres,
+            });
             await editarUsuario(p, checkBox, dataEmpresa?.id);
             await mostrarKardex({ _id_empresa: dataEmpresa?.id });
             onClose();

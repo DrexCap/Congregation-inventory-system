@@ -80,7 +80,7 @@ export function Header({ stateConfig, nombreRegistro }) {
                     translatey="-12px"
                 />
                 <span className="nombre" style={{ fontSize: "18px" }}>
-                  {nombreRegistro ? nombreRegistro : data?.[0]?.nombres}
+                  {nombreRegistro?.id === user?.id ? nombreRegistro.nombres : data?.[0]?.nombres}
                 </span>
                 {stateConfig.state && (
                     <ListaMenuDesplegable

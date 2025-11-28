@@ -30,7 +30,10 @@ export function UsuariosTemplate({data}) {
 
     const { setBuscador } = useUserStore();
 
-    const[nombreRegistro,setNombreRegistro] = useState("");
+    const[nombreRegistro,setNombreRegistro] = useState({
+        id: "",
+        nombres: "",
+    });
 
     return (
         <Container>
