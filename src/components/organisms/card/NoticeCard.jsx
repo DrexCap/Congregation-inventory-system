@@ -77,7 +77,7 @@ export function NoticeCard() {
         </Modules>
 
         <Text>
-          El módulo <strong>Productos</strong> está en mantenimiento debido a una actualización de trazabilidad.
+          Los módulos <strong>Productos</strong> y <strong>Kardex</strong> están en mantenimiento debido a una actualización de trazabilidad.
         </Text>
 
         <Text style={{ fontWeight: 600, marginTop: 4 }}>
