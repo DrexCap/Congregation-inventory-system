@@ -71,6 +71,7 @@ export * from "./components/organisms/formularios/traza/RegistrarTrazaCinco";
 export * from "./components/organisms/formularios/traza/RegistrarTrazaSeis";
 export * from "./components/organisms/formularios/traza/RegistrarTrazaSiete";
 export * from "./components/organisms/card/CardStock";
+export * from "./components/organisms/card/NoticeCard";
 export * from "./components/organisms/ListaMenuDesplegable";
 export * from "./components/organisms/Trazabilidad";
 export * from "./components/molecules/ExampleProgress";

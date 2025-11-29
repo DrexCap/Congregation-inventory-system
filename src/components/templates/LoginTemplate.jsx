@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {Btnsave, v, useAuthStore, InputText, FooterLogin, RegistrarAdmin} from "../../index";
+import {Btnsave, v, useAuthStore, InputText, FooterLogin, RegistrarAdmin, NoticeCard} from "../../index";
 import { Device } from "../../styles/breackpoints";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -45,6 +45,7 @@ export function LoginTemplate() {
                 <img src={logo}></img>
                 <span>StockPRO</span>
             </div>
+            
             <div className="bannerlateral">
                 <img src={carrito}></img>
             </div>
@@ -97,6 +98,7 @@ export function LoginTemplate() {
                           </InputText>
                         </article>
 
+
                         <ContainerBtn>
                             <Btnsave titulo="Iniciar" bgcolor="#fc6b32" />
                             <Btnsave
@@ -107,6 +109,11 @@ export function LoginTemplate() {
                         </ContainerBtn>
                     </form>
                 </div>
+                
+                <div className="notice-card-container">
+                  <NoticeCard />
+                </div>
+
                 <FooterLogin />
             </div>
         </Container>
@@ -114,6 +121,16 @@ export function LoginTemplate() {
 }
 
 const Container = styled.div`
+
+  article {
+    margin-bottom: 0px !important; /* menos espacio entre inputs */
+  }
+
+  .notice-card {
+    transform: scale(0.85); /* reduce todo en 15% */
+    transform-origin: top center;
+  }
+
   background-size: cover;
   height: 100vh;
   display: grid;
@@ -128,7 +145,7 @@ const Container = styled.div`
   .contentLogo {
     position: absolute;
     top: 15px;
-    font-weight: 700;
+    font-weight: 500;
     display: flex;
     left: 15px;
     align-items: center;
@@ -154,7 +171,7 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     img {
-      width: 80%;
+      width: 60%;
     }
   }
   .contentCard {
@@ -163,7 +180,7 @@ const Container = styled.div`
     background-size: cover;
     z-index: 100;
     position: relative;
-    gap: 30px;
+    gap: 10px;
     display: flex;
     padding: 20px;
     box-shadow: 8px 5px 18px 3px rgba(0, 0, 0, 0.35);
@@ -175,11 +192,11 @@ const Container = styled.div`
     flex-direction: column;
     justify-content: space-between;
     .card {
-      padding-top: 80px;
-      width: 100%;
-      @media ${Device.laptop} {
-        width: 50%;
-      }
+      padding-top: 0px; /* antes 20px o 80px */
+      width: 55%;
+      display: flex;
+      flex-direction: column;
+      gap: 0px; /* compacto */
     }
     .version {
       color: #727272;
@@ -192,22 +209,21 @@ const Container = styled.div`
 
       img {
         width: 40%;
-
         animation: flotar 1.5s ease-in-out infinite alternate;
       }
     }
     .frase {
       color: #fc6c32;
-      font-size: 1.5rem;
       font-weight: 700;
-      margin-bottom: 30px;
+      margin-bottom: 0px;
+      font-size: 1.2rem !important; /* más pequeño */
     }
     .ayuda {
       position: absolute;
       top: 15px;
       right: 15px;
       color: #8d8d8d;
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 500;
     }
     &:hover {
@@ -235,7 +251,7 @@ const Container = styled.div`
   }
 `;
 const Titulo = styled.span`
-  font-size: 3rem;
+  font-size: 2.2rem;
   font-weight: 700;
 `;
 const ContainerBtn = styled.div`
