@@ -6,10 +6,10 @@ const Card = styled.div`
   max-width: 650px;
   margin: 0rem auto;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
+  border: 2px solid #e5e7eb;
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  box-shadow: 3px 6px 12px rgba(0,0,0,0.06);
   display: flex;
 `;
 
